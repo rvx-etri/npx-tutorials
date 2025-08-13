@@ -19,8 +19,8 @@
 		</spec>
 
 		<ip_instance>
-			<name>i_dca_matrix_mac00</name>
-			<library_name>dca_matrix_mac_mmiox_mlsu</library_name>
+			<name>i_dca_neugemm00</name>
+			<library_name>dca_neugemm_mmiox_mlsu</library_name>
 			<parameter>
 				<id>TENSOR_PARA</id>
 				<value>32</value>
