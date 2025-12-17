@@ -34,55 +34,28 @@ ROM_NAME=NONE
 endif
 
 PLATFORM_DIR = $(call absolute_path,${CURDIR}/../..)
-
-GERENATRED_DIRNAME=generated
-GERENATRED_SSW_DIRNAME=ssw
 UTIL_DIR = ${PLATFORM_DIR}/util
 
 TARGET_DIR?=${CURDIR}/target
-RESULT_DIR?=${UTIL_DIR}/${GERENATRED_DIRNAME}/${GERENATRED_SSW_DIRNAME}
+
+RESULT_DIR?=${UTIL_DIR}/generated/ssw/fakefile
 RESULT_DIR_ABS=$(call absolute_path,${RESULT_DIR})
 
-clean:
-	@true
+all: convert
 
-convert: _convert update_api
+convert: mkdir_result_dir _convert
 
 _convert:
-	${PYTHON3_CMD} ${RVX_ENV}/util/convert_file.py -i ${FILE_LIST} -o ${RESULT_DIR} -r ${ROM_NAME}
+	@${PYTHON3_CMD} ${RVX_ENV}/util/convert_file.py -i ${FILE_LIST} -o ${RESULT_DIR} -r ${ROM_NAME}
 
-generated_clean:
-	@cd ${RESULT_DIR} && rm -rf *_file.*
+mkdir_result_dir:
+	@cd ${UTIL_DIR} && make --no-print-directory generated
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${RESULT_DIR_ABS}
 
-generated_mkdir:
-	@cd ${UTIL_DIR} && mkdir -p ${GERENATRED_DIRNAME}
+clean_generated:
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_dir ${RESULT_DIR_ABS}
 
-generated_ssw_mkdir: generated_mkdir
-	@mkdir -p ${RESULT_DIR_ABS}
-	@cp -f ${RVX_ENV}/util/gitignore.generated.txt ${RESULT_DIR}/.gitignore
-
-add:
-	mkdir -p target
-	cp -r ${ADD_FILE_LIST} ${TARGET_DIR}
-
-remove:
-	-cd ${TARGET_DIR} && rm -rf ${REMOVE_FILE_LIST}
-
-all: generated_ssw_mkdir generated_clean convert
-
-USER_DIR = ${PLATFORM_DIR}/user
-API_DIR = ${USER_DIR}/api
-
-FAKEFILE_API_LIST=$(wildcard ${API_DIR}/*_*_file.*)
-FAKEFILE_API_NAME_LIST=$(notdir ${FAKEFILE_API_LIST})
-
-update_api: $(addsuffix .update_api, ${FAKEFILE_API_NAME_LIST})
-
-$(addsuffix .update_api, ${FAKEFILE_API_NAME_LIST}):%.update_api:
-	@if [ -f ${RESULT_DIR}/$(*) ]; \
-	then \
-		mv -f ${RESULT_DIR}/$(*) ${API_DIR}; \
-	fi
+clean: clean_generated
 
 FORCE:
 

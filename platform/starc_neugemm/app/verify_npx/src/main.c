@@ -17,8 +17,7 @@
 
 #define FNAME_MAX 256
 
-// char app_name[FNAME_MAX] = "verify_app";
-char app_name[FNAME_MAX] = "mnist_app";
+char app_name[FNAME_MAX] = "verify_app";
 
 char net_fname[FNAME_MAX];
 char opt_fname[FNAME_MAX];
@@ -79,7 +78,7 @@ int main()
       sample_index++;
     }
 
-    printf("\n\nVerify NPX Complete");
+    printf_must("\n\nVerify NPX Complete");
   }
 
   return 0;

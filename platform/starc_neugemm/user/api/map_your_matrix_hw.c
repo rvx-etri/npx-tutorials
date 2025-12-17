@@ -11,42 +11,42 @@
 
 const char matrix_hw_name[] = "DCA";
 
-ervp_task_wait_fx_t i_dca_neugemm00_add(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_add(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
 {
   return dca_neugemm_add(mop_mapping, i_dca_neugemm00_info, ma_info, mb_info, mc_info, option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_sub(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_sub(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
 {
   return dca_neugemm_sub(mop_mapping, i_dca_neugemm00_info, ma_info, mb_info, mc_info, option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_ewmult(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_ewmult(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
 {
   return dca_neugemm_ewmult(mop_mapping, i_dca_neugemm00_info, ma_info, mb_info, mc_info, option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_mult(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_mult(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int option_value)
 {
   return dca_neugemm_mult(mop_mapping, i_dca_neugemm00_info, ma_info, mb_info, mc_info, option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_scalar_mult_fixed(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, int scalar_value, ErvpMatrixInfo *mc_info, unsigned int option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_scalar_mult_fixed(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, int scalar_value, ErvpMatrixInfo *mc_info, unsigned int option_value)
 {
   return dca_neugemm_scalar_mult_fixed(mop_mapping, i_dca_neugemm00_info, ma_info, scalar_value, mc_info, option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_conv_oneblock(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int conv_option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_conv_oneblock(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int conv_option_value)
 {
   return dca_neugemm_conv_oneblock(mop_mapping, i_dca_neugemm00_info, ma_info, mb_info, mc_info, conv_option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_conv_oneblock_sharedinput(ervp_mop_mapping_t *mop_mapping, int num_output, const ErvpMatrixInfo *input_info, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo **output_info_list, unsigned int conv_option_value)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_conv_oneblock_sharedinput(ervp_mop_mapping_t *mop_mapping, int num_output, const ErvpMatrixInfo *input_info, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo **output_info_list, unsigned int conv_option_value)
 {
   return dca_neugemm_conv_oneblock_sharedinput(mop_mapping, i_dca_neugemm00_info, num_output, input_info, kernel_info_list, output_info_list, conv_option_value);
 }
 
-ervp_task_wait_fx_t i_dca_neugemm00_conv_oneblock_sharedoutput(ervp_mop_mapping_t *mop_mapping, int num_input, const ErvpMatrixInfo **input_info_list, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo *output_info, unsigned int conv_option_value, int init_ouptut)
+ervp_hwtask_busy_fx_t i_dca_neugemm00_conv_oneblock_sharedoutput(ervp_mop_mapping_t *mop_mapping, int num_input, const ErvpMatrixInfo **input_info_list, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo *output_info, unsigned int conv_option_value, int init_ouptut)
 {
   return dca_neugemm_conv_oneblock_sharedoutput(mop_mapping, i_dca_neugemm00_info, num_input, input_info_list, kernel_info_list, output_info, conv_option_value, init_ouptut);
 }
@@ -55,17 +55,17 @@ ervp_task_wait_fx_t i_dca_neugemm00_conv_oneblock_sharedoutput(ervp_mop_mapping_
 
 static ervp_blocked_matrix_info_t* blocked_info_conv;
 
-ervp_task_wait_fx_t i_blocked_matrix_conv(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int conv_option_value)
+ervp_hwtask_busy_fx_t i_blocked_matrix_conv(ervp_mop_mapping_t *mop_mapping, const ErvpMatrixInfo *ma_info, const ErvpMatrixInfo *mb_info, ErvpMatrixInfo *mc_info, unsigned int conv_option_value)
 {
   return blocked_matrix_conv(blocked_info_conv, ma_info, mb_info, mc_info, conv_option_value);
 }
 
-ervp_task_wait_fx_t i_blocked_matrix_conv_sharedinput(ervp_mop_mapping_t *mop_mapping, int num_output, const ErvpMatrixInfo *input_info, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo **output_info_list, unsigned int conv_option_value)
+ervp_hwtask_busy_fx_t i_blocked_matrix_conv_sharedinput(ervp_mop_mapping_t *mop_mapping, int num_output, const ErvpMatrixInfo *input_info, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo **output_info_list, unsigned int conv_option_value)
 {
   return blocked_matrix_conv_sharedinput(blocked_info_conv, num_output, input_info, kernel_info_list, output_info_list, conv_option_value);
 }
 
-ervp_task_wait_fx_t i_blocked_matrix_conv_sharedoutput(ervp_mop_mapping_t *mop_mapping, int num_input, const ErvpMatrixInfo **input_info_list, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo *output_info, unsigned int conv_option_value, int init_ouptut)
+ervp_hwtask_busy_fx_t i_blocked_matrix_conv_sharedoutput(ervp_mop_mapping_t *mop_mapping, int num_input, const ErvpMatrixInfo **input_info_list, const ErvpMatrixInfo **kernel_info_list, ErvpMatrixInfo *output_info, unsigned int conv_option_value, int init_ouptut)
 {
   return blocked_matrix_conv_sharedoutput(blocked_info_conv, num_input, input_info_list, kernel_info_list, output_info, conv_option_value, init_ouptut);
 }

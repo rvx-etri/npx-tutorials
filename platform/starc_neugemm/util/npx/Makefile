@@ -94,40 +94,40 @@ endif
 
 $(addsuffix .sample, ${ALL_APP_CFG_NAME_LIST}):%.sample:
 ifdef XARVIS_NPX_TRANIER_HOME
-	-rm -rf ${PARA_DIR_ABS}/$(*)/riscv/*_sample_*.*
-	-rm -rf ${PARA_DIR_ABS}/$(*)/riscv/*_layeroutput_*.*
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_files ${PARA_DIR_ABS}/$(*)/riscv *_sample_*.*
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_files ${PARA_DIR_ABS}/$(*)/riscv *_layeroutput_*.*
 	cd ${XARVIS_NPX_TRANIER_HOME} && make sample CFG_FILE="${APP_CFG_DIR_ABS}/$(*).cfg" RESULT_DIR=${PARA_DIR_ABS} NUM_SAMPLE=${NUM_SAMPLE}
 endif
 
 $(addsuffix .tv, ${ALL_APP_CFG_NAME_LIST}):%.tv:
 ifdef XARVIS_NPX_TRANIER_HOME
-	-rm -rf ${PARA_DIR_ABS}/$(*)/riscv/*_sample_*.*
-	-rm -rf ${PARA_DIR_ABS}/$(*)/riscv/*_layeroutput_*.*
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_files ${PARA_DIR_ABS}/$(*)/riscv *_sample_*.*
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_files ${PARA_DIR_ABS}/$(*)/riscv *_layeroutput_*.*
 	cd ${XARVIS_NPX_TRANIER_HOME} && make tv CFG_FILE="${APP_CFG_DIR_ABS}/$(*).cfg" RESULT_DIR=${PARA_DIR_ABS} NUM_SAMPLE=${NUM_SAMPLE}
 endif
 
 $(addsuffix .opt, ${ALL_APP_CFG_NAME_LIST}):%.opt:
 	cd ${RVX_ENV}/util && ${PYTHON3_CMD} ./generate_npx_operator_info.py -cfg "${APP_CFG_DIR_ABS}/$(*).cfg" -ssw_info ${SSW_INFO_FILE} -o ${PARA_DIR_ABS} -s _operator
 
-$(addsuffix .file_gen, ${ALL_APP_CFG_NAME_LIST}):%.file_gen: %.api_clean
-	cd ${UTIL_DIR} && make fakefile
-	cd ${FAKEFIE_DIR} && make generated_ssw_mkdir RESULT_DIR=${RESULT_DIR}
+$(addsuffix .file_gen, ${ALL_APP_CFG_NAME_LIST}):%.file_gen: %.generated_clean
+	@cd ${UTIL_DIR} && make fakefile
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${RESULT_DIR}
 	cd ${FAKEFIE_DIR} && make convert FILE_LIST="${APP_CFG_DIR_ABS}/$(*)_preprocess.cfg" RESULT_DIR=${RESULT_DIR}
-	cd ${FAKEFIE_DIR} && make convert FILE_LIST="${PARA_DIR_ABS}/$(*)/riscv/$(*)*.bin" RESULT_DIR=${RESULT_DIR}
-	cd ${FAKEFIE_DIR} && make convert FILE_LIST="${PARA_DIR_ABS}/$(*)/riscv/$(*)*.cfg" RESULT_DIR=${RESULT_DIR}
+	cd ${FAKEFIE_DIR} && make convert FILE_LIST="$(wildcard ${PARA_DIR_ABS}/$(*)/riscv/$(*)*.bin)" RESULT_DIR=${RESULT_DIR}
+	cd ${FAKEFIE_DIR} && make convert FILE_LIST="$(wildcard ${PARA_DIR_ABS}/$(*)/riscv/$(*)*.cfg)" RESULT_DIR=${RESULT_DIR}
 
-$(addsuffix .api_clean, ${ALL_APP_CFG_NAME_LIST}):%.api_clean:
-	-cd ${RESULT_DIR} && rm -rf $(*)_*_file.*
+$(addsuffix .generated_clean, ${ALL_APP_CFG_NAME_LIST}):%.generated_clean:
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_files ${RESULT_DIR} $(*)_*_file.*
 
-api_clean: $(addsuffix .api_clean, ${ALL_APP_CFG_NAME_LIST})
+generated_clean: $(addsuffix .generated_clean, ${ALL_APP_CFG_NAME_LIST})
 
-$(addsuffix .only, ${ALL_APP_CFG_NAME_LIST}):%.only: api_clean %.train %.riscv %.sample %.opt %.file_gen
+$(addsuffix .only, ${ALL_APP_CFG_NAME_LIST}):%.only: generated_clean %.train %.riscv %.sample %.opt %.file_gen
 
-$(addsuffix .verify, ${ALL_APP_CFG_NAME_LIST}):%.verify: api_clean %.train %.riscv %.tv %.opt %.file_gen
+$(addsuffix .verify, ${ALL_APP_CFG_NAME_LIST}):%.verify: generated_clean %.train %.riscv %.tv %.opt %.file_gen
 
 verify:
 	make verify_app.verify NUM_SAMPLE=3
 
 FORCE:
 
-.PHONY: FORCE clean api_clean $(addsuffix .api_clean, ${ALL_APP_CFG_NAME_LIST})
+.PHONY: FORCE clean generated_clean $(addsuffix .generated_clean, ${ALL_APP_CFG_NAME_LIST})

@@ -2,7 +2,12 @@
 #include "ervp_printf.h"
 #include "ervp_printf_section.h"
 #include "ervp_core_id.h"
-#include "map_your_matrix_hw.h"
+#include "ervp_matrix_op_sw.h"
+
+#ifdef INCLUDE_DCA
+  #include "map_your_matrix_hw.h"
+  #include "ip_instance_info.h"
+#endif
 
 #include "npx_parser.h"
 #include "npx_layer.h"
@@ -12,8 +17,8 @@
 
 #define FNAME_MAX 256
 
-// char app_name[FNAME_MAX] = "verify_app";
-char app_name[FNAME_MAX] = "mnist_app";
+char app_name[FNAME_MAX] = "verify_app";
+// char app_name[FNAME_MAX] = "mnist_app";
 // char app_name[FNAME_MAX] = "fmnist_app";
 // char app_name[FNAME_MAX] = "cifar10_app";
 // char app_name[FNAME_MAX] = "gtsrb_app";
@@ -34,7 +39,9 @@ int main()
   if (EXCLUSIVE_ID == 0)
   {
     ervp_mop_mapping_t *mop_mapping = matrix_op_mapping_alloc();
+#ifdef INCLUDE_DCA
     map_your_matrix_function(mop_mapping);
+#endif
 
     sprintf(net_fname, "%s_network.cfg", app_name);
     sprintf(opt_fname, "%s_operator.cfg", app_name);
@@ -62,10 +69,9 @@ int main()
       npx_layerio_state_t state;
       state.input_tsseq = input_tsseq;
       state.output_tsseq = npx_inference(net, state.input_tsseq, 0, net->num_layer);
-      npx_classify(net, state.output_tsseq, -1, npx_sample);
       npx_layerio_tsseq_free(state.output_tsseq);
       //
-      test_memory_leak();
+      assert(test_memory_leak()==0);
     }
   }
 
