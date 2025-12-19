@@ -38,8 +38,10 @@ fakefile: FORCE fakefile.base
 npx: FORCE npx.base
 	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${CURDIR}/npx/app
 
+arx: FORCE arx.base
+
 generated: FORCE
-	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${CURDIR}/$(*)
+	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${CURDIR}/generated
 	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py cp_file ${RVX_ENV}/util/gitignore.generated.txt ${CURDIR}/generated/.gitignore
 
 clean: $(addsuffix .clean, ${UTIL_LIST})

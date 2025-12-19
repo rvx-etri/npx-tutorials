@@ -110,8 +110,8 @@ $(addsuffix .opt, ${ALL_APP_CFG_NAME_LIST}):%.opt:
 	cd ${RVX_ENV}/util && ${PYTHON3_CMD} ./generate_npx_operator_info.py -cfg "${APP_CFG_DIR_ABS}/$(*).cfg" -ssw_info ${SSW_INFO_FILE} -o ${PARA_DIR_ABS} -s _operator
 
 $(addsuffix .file_gen, ${ALL_APP_CFG_NAME_LIST}):%.file_gen: %.generated_clean
-	@cd ${UTIL_DIR} && make fakefile
-	@cd ${UTIL_DIR} && make generated
+	@cd ${UTIL_DIR} && make --no-print-directory fakefile
+	@cd ${UTIL_DIR} && make --no-print-directory generated
 	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${RESULT_DIR}
 	cd ${FAKEFIE_DIR} && make convert FILE_LIST="${APP_CFG_DIR_ABS}/$(*)_preprocess.cfg" RESULT_DIR=${RESULT_DIR}
 	cd ${FAKEFIE_DIR} && make convert FILE_LIST="$(wildcard ${PARA_DIR_ABS}/$(*)/riscv/$(*)*.bin)" RESULT_DIR=${RESULT_DIR}

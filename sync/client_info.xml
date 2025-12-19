@@ -2,12 +2,12 @@
 <version_info>
   <rvx_version.path>kshan/rvx_server_manager_v2</rvx_version.path>
   <rvx_version.url>private</rvx_version.url>
-  <rvx_version.commit>1a8867c</rvx_version.commit>
-  <rvx_version.date>2025-12-17-15-48</rvx_version.date>
+  <rvx_version.commit>f6a2885</rvx_version.commit>
+  <rvx_version.date>2025-12-19-16-54</rvx_version.date>
   <rvx_devkit.path>rvx_server_manager_v2/rvx_devkit</rvx_devkit.path>
   <rvx_devkit.url>private</rvx_devkit.url>
-  <rvx_devkit.commit>f45fa2a</rvx_devkit.commit>
-  <rvx_devkit.date>2025-12-17-15-22</rvx_devkit.date>
+  <rvx_devkit.commit>d456b0b</rvx_devkit.commit>
+  <rvx_devkit.date>2025-12-19-16-51</rvx_devkit.date>
   <rvx_binary.path>rvx_server_manager_v2/rvx_binary</rvx_binary.path>
   <rvx_binary.url>https://github.com/rvx-etri/rvx_binary.git</rvx_binary.url>
   <rvx_binary.commit>fe4c137</rvx_binary.commit>
