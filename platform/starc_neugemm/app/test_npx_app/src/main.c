@@ -14,8 +14,8 @@
 
 #define FNAME_MAX 256
 
-char app_name[FNAME_MAX] = "verify_app";
-//char app_name[FNAME_MAX] = "mnist_app";
+//char app_name[FNAME_MAX] = "verify_app";
+char app_name[FNAME_MAX] = "mnist_app";
 //char app_name[FNAME_MAX] = "fmnist_app";
 //char app_name[FNAME_MAX] = "cifar10_app";
 //char app_name[FNAME_MAX] = "gtsrb_app";

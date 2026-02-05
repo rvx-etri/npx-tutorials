@@ -80,7 +80,7 @@ app_list:
 
 all: ${ALL_APP_CFG_NAME_LIST}
 
-${ALL_APP_CFG_NAME_LIST}:%: check_train_home %.train %.riscv %.sample %.opt %.file_gen
+${ALL_APP_CFG_NAME_LIST}:%: check_train_home %.train %.riscv %.sample %.opt %.gen_file
 
 $(addsuffix .train, ${ALL_APP_CFG_NAME_LIST}):%.train:
 ifdef XARVIS_NPX_TRANIER_HOME
@@ -109,7 +109,7 @@ endif
 $(addsuffix .opt, ${ALL_APP_CFG_NAME_LIST}):%.opt:
 	cd ${RVX_ENV}/util && ${PYTHON3_CMD} ./generate_npx_operator_info.py -cfg "${APP_CFG_DIR_ABS}/$(*).cfg" -ssw_info ${SSW_INFO_FILE} -o ${PARA_DIR_ABS} -s _operator
 
-$(addsuffix .file_gen, ${ALL_APP_CFG_NAME_LIST}):%.file_gen: %.generated_clean
+$(addsuffix .gen_file, ${ALL_APP_CFG_NAME_LIST}):%.gen_file: %.clean_generated
 	@cd ${UTIL_DIR} && make --no-print-directory fakefile
 	@cd ${UTIL_DIR} && make --no-print-directory generated
 	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${RESULT_DIR}
@@ -117,18 +117,18 @@ $(addsuffix .file_gen, ${ALL_APP_CFG_NAME_LIST}):%.file_gen: %.generated_clean
 	cd ${FAKEFIE_DIR} && make convert FILE_LIST="$(wildcard ${PARA_DIR_ABS}/$(*)/riscv/$(*)*.bin)" RESULT_DIR=${RESULT_DIR}
 	cd ${FAKEFIE_DIR} && make convert FILE_LIST="$(wildcard ${PARA_DIR_ABS}/$(*)/riscv/$(*)*.cfg)" RESULT_DIR=${RESULT_DIR}
 
-$(addsuffix .generated_clean, ${ALL_APP_CFG_NAME_LIST}):%.generated_clean:
+$(addsuffix .clean_generated, ${ALL_APP_CFG_NAME_LIST}):%.clean_generated:
 	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py rm_files ${RESULT_DIR} $(*)_*_file.*
 
-generated_clean: $(addsuffix .generated_clean, ${ALL_APP_CFG_NAME_LIST})
+clean_generated: $(addsuffix .clean_generated, ${ALL_APP_CFG_NAME_LIST})
 
-$(addsuffix .only, ${ALL_APP_CFG_NAME_LIST}):%.only: generated_clean %.train %.riscv %.sample %.opt %.file_gen
+$(addsuffix .only, ${ALL_APP_CFG_NAME_LIST}):%.only: clean_generated %.train %.riscv %.sample %.opt %.gen_file
 
-$(addsuffix .verify, ${ALL_APP_CFG_NAME_LIST}):%.verify: generated_clean %.train %.riscv %.tv %.opt %.file_gen
+$(addsuffix .verify, ${ALL_APP_CFG_NAME_LIST}):%.verify: clean_generated %.train %.riscv %.tv %.opt %.gen_file
 
 verify:
 	make verify_app.verify NUM_SAMPLE=3
 
 FORCE:
 
-.PHONY: FORCE clean generated_clean $(addsuffix .generated_clean, ${ALL_APP_CFG_NAME_LIST})
+.PHONY: FORCE clean clean_generated $(addsuffix .clean_generated, ${ALL_APP_CFG_NAME_LIST})

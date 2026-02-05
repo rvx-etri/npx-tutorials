@@ -25,7 +25,7 @@ endif
 TEMPLATE_FILE = ${RVX_ENV}/makefile/Makefile.util.template
 include ${RVX_UTIL_HOME}/template_makefile.mh
 
-UTIL_LIST=mmio rom image fakefile npx arx generated
+UTIL_LIST=mmio rom image fakefile npx arx
 
 $(addsuffix .base, ${UTIL_LIST}):%.base:
 	@${PYTHON3_CMD} ${RVX_UTIL_HOME}/os_util.py mkdir ${CURDIR}/$(*)
@@ -47,10 +47,7 @@ generated: FORCE
 clean: $(addsuffix .clean, ${UTIL_LIST})
 
 $(addsuffix .clean, ${UTIL_LIST}):%.clean:
-	@if [ -d $(*) ]; \
-	then \
-		cd $(*) && make --no-print-directory clean; \
-	fi
+	-@cd $(*) && make --no-print-directory clean
 
 -include ./user_util.mh
 
