@@ -11,145 +11,201 @@
 // IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
 // COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
 // ****************************************************************************
-// 2025-11-05
+// 2026-07-09
 // Kyuseung Han (han@etri.re.kr)
 // ****************************************************************************
 // ****************************************************************************
 
 `include "ervp_global.vh"
-`include "ervp_axi_define.vh"
-`include "dca_matrix_lsu_inst.vh"
+
 
 
 
 module DCA_MODULE_23
 (
   dca_port_03,
-  dca_port_06,
-  dca_port_12,
-  dca_port_02,
-
-  dca_port_04,
-
-  dca_port_14,
-  dca_port_10,
   dca_port_01,
-  dca_port_08,
+  
   dca_port_07,
+  dca_port_06,
+  dca_port_00,  
 
-  dca_port_11,
-  dca_port_13,
-  dca_port_09,
+  dca_port_02,
+  dca_port_08,
+  dca_port_04,
   dca_port_05,
-  dca_port_00
+  dca_port_09
 );
 
 
 
-parameter LSU_PARA = 0;
-parameter AXI_PARA = 32;
-parameter MATRIX_SIZE_PARA = 4;
 
-`include "ervp_axi_lpara.vb"
-`include "dca_matrix_dim_util.vb"
-`include "dca_matrix_dim_lpara.vb"
+parameter TENSOR_PARA = 0;
 
-input wire dca_port_03;
+`include "dca_tensor_scalar_lpara.vb"
+
+input wire dca_port_03, dca_port_01;
+input wire dca_port_07;
 input wire dca_port_06;
-input wire dca_port_12;
+input wire dca_port_00;
+
 input wire dca_port_02;
+input wire [BW_TENSOR_SCALAR-1:0] dca_port_08;
+input wire [BW_TENSOR_SCALAR-1:0] dca_port_04;
+output wire dca_port_05;
+output wire [BW_TENSOR_SCALAR-1:0] dca_port_09;
 
-`include "dca_lsu_util.vb"
-`include "dca_lsu_lpara.vb"
+localparam  DCA_LPARA_2 = 5;
+localparam  DCA_LPARA_1 = TENSOR_BW_SIGNIFICAND + DCA_LPARA_2;
+localparam  DCA_LPARA_0 = `MAX(TENSOR_BW_INTEGER, DCA_LPARA_1) + 1;
 
-input wire [BW_WDATA_INFO-1:0] dca_port_04;
+reg signed [DCA_LPARA_0-1:0] dca_signal_24;
+reg signed [DCA_LPARA_0-1:0] dca_signal_15;
+reg signed [DCA_LPARA_0-1:0] dca_signal_21;
+wire signed [DCA_LPARA_0+1-1:0] dca_signal_03;
 
-output wire dca_port_14;
-input wire dca_port_10;
-input wire [BW_MEMORY_ROW_BUFFER-1:0] dca_port_01;
-input wire [BW_MEMORY_ROW_BUFFER-1:0] dca_port_08;
-input wire [BW_TXN_INFO-1:0] dca_port_07;
+wire signed [TENSOR_BW_INTEGER-1:0] dca_signal_14;
+wire signed [TENSOR_BW_INTEGER-1:0] dca_signal_16;
+wire signed [TENSOR_BW_INTEGER-1:0] dca_signal_02;
+wire signed [TENSOR_BW_INTEGER-1:0] dca_signal_17;
 
-input wire dca_port_11;
-output reg dca_port_13;
-output reg [BW_MEMORY_ROW_BUFFER-1:0] dca_port_09;
-output reg [(BW_MEMORY_ROW_BUFFER/`BW_BYTE)-1:0] dca_port_05;
-output reg [BW_TXN_INFO-1:0] dca_port_00;
+wire dca_signal_07;
+wire dca_signal_09;
 
-genvar i;
+wire [BW_TENSOR_SCALAR-1:0] dca_signal_00;
+wire [TENSOR_BW_EXPONENT-1:0] dca_signal_19;
+wire [DCA_LPARA_1-1:0] dca_signal_22;
+wire [DCA_LPARA_1-1:0] dca_signal_08;
 
-wire [MATRIX_NUM_COL-1:0] dca_signal_14;
-wire [`BW_DCA_MATRIX_LSU_INST_OPCODE-1:0] dca_signal_01;
-wire [`BW_DCA_MATRIX_INFO_ADDR-1:0] dca_signal_03;
-wire [`BW_DCA_MATRIX_INFO_STRIDE_LS3-1:0] dca_signal_00;
-wire [`BW_DCA_MATRIX_INFO_NUM_ROW_M1-1:0] dca_signal_10;
-wire [`BW_DCA_MATRIX_INFO_NUM_COL_M1-1:0] dca_signal_05;
-wire [`BW_DCA_MATRIX_INFO_IS_SIGNED-1:0] dca_signal_07;
-wire [`BW_DCA_MATRIX_INFO_IS_FLOAT-1:0] dca_signal_09;
-wire [`BW_DCA_MATRIX_INFO_ADDR_LSA_P3-1:0] dca_signal_06;
-
-wire [BW_BITADDR-1:0] dca_signal_02;
-wire [`BW_AXI_ALEN-1:0] dca_signal_04;
-wire dca_signal_13;
-wire dca_signal_08;
-
+wire [DCA_LPARA_1-1:0] dca_signal_04;
+wire [DCA_LPARA_1-1:0] dca_signal_23;
 wire dca_signal_12;
-wire dca_signal_11;
+wire [DCA_LPARA_1+1-1:0] dca_signal_13;
 
-wire [(BW_MEMORY_ROW_BUFFER/`BW_BYTE)-1:0] dca_signal_15;
+wire dca_signal_18;
+wire dca_signal_01;
 
-assign {dca_signal_06, dca_signal_09, dca_signal_07, dca_signal_05, dca_signal_10, dca_signal_00, dca_signal_03, dca_signal_01, dca_signal_14} = dca_port_04;
-assign {dca_signal_08, dca_signal_13, dca_signal_04, dca_signal_02} = dca_port_07;
+wire [BW_TENSOR_SCALAR-1:0] dca_signal_11;
+wire [TENSOR_BW_EXPONENT-1:0] dca_signal_05;
+wire [DCA_LPARA_1+1-1:0] dca_signal_20;
 
-assign dca_signal_12 = dca_port_10 & dca_port_14;
-assign dca_signal_11 = dca_port_13 & dca_port_11;
+wire dca_signal_06;
+wire [BW_TENSOR_SCALAR-1:0] dca_signal_10;
 
-assign dca_port_14 = dca_port_13? dca_port_11 : 1;
+assign dca_signal_14 = dca_port_08;
+assign dca_signal_16 = dca_port_06? (~dca_port_04) : dca_port_04;
+assign dca_signal_02 = dca_port_06;
 
-always@(posedge dca_port_03 or negedge dca_port_06)
+`ifdef PACT_SUPPORT_FLOAT32
+
+always@(*)
 begin
-  if(dca_port_06==0)
-    dca_port_13 <= 0;
-  else if(dca_signal_12)
-    dca_port_13 <= ~dca_signal_08;
-  else if(dca_signal_11)
-    dca_port_13 <= 0;
-end
-
-always@(posedge dca_port_03 or negedge dca_port_06)
-begin
-  if(dca_port_06==0)
+  dca_signal_24 = $signed(dca_signal_14);
+  dca_signal_15 = $signed(dca_signal_16);
+  dca_signal_21 = dca_signal_02;
+  if(dca_port_00)
   begin
-    dca_port_09 <= 0;
-    dca_port_00 <= 0;
+    dca_signal_24 = $signed(dca_signal_04);
+    dca_signal_15 = $signed(dca_signal_23);
+    dca_signal_21 = dca_signal_12;
   end
-  else if(dca_port_02 && dca_signal_12)
+  else
   begin
-    dca_port_09 <= ((~dca_port_08)&dca_port_09) | (dca_port_08&dca_port_01);
-    dca_port_00 <= dca_port_07;
-  end
-end
-
-generate
-for(i=0; i<(BW_MEMORY_ROW_BUFFER/`BW_BYTE); i=i+1)
-begin : i_gen_aligned_row_wstrb
-  assign dca_signal_15[i] = dca_port_08[i<<3];
-end
-endgenerate
-
-always@(posedge dca_port_03 or negedge dca_port_06)
-begin
-  if(dca_port_06==0)
-    dca_port_05 <= 0;
-  else if(dca_port_02)
-  begin
-    if(dca_signal_12 && dca_signal_11)
-      dca_port_05 <= dca_signal_15;
-    else if(dca_signal_11)
-      dca_port_05 <= 0;
-    else if(dca_signal_12)
-      dca_port_05 <= dca_port_05 | dca_signal_15;
+    dca_signal_24 = $signed(dca_signal_14);
+    dca_signal_15 = $signed(dca_signal_16);
+    dca_signal_21 = dca_signal_02;
   end
 end
+
+assign dca_signal_03 = dca_signal_24 + dca_signal_15 + dca_signal_21;
+
+assign dca_signal_17 = dca_signal_03;
+
+PACT_FADDER_PIPELINE1
+#(
+  .TENSOR_BW_SIGNIFICAND_EXTENDED(DCA_LPARA_1)
+)
+i_dca_instance_1
+(
+  .clk(dca_port_03),
+  .rstnn(dca_port_01),
+  .enable(dca_port_07),
+
+  .is_sub(dca_port_06),
+  .in_valid(dca_port_02),
+  .in_input0_float(dca_port_08),
+  .in_input1_float(dca_port_04),
+
+  .out_valid_early_case(dca_signal_07),
+  .out_valid_normal_case(dca_signal_09),
+
+  .out_early_output0(dca_signal_00),
+  .out_muxed_exponent(dca_signal_19),
+  .out_input0_significand(dca_signal_22),
+  .out_input1_significand(dca_signal_08)
+);
+
+PACT_FADDER_PIPELINE2
+#(
+  .TENSOR_BW_SIGNIFICAND_EXTENDED(DCA_LPARA_1)
+)
+i_dca_instance_0
+(
+  .clk(dca_port_03),
+  .rstnn(dca_port_01),
+  .enable(dca_port_07),
+
+  .in_valid_early_case(dca_signal_07),
+  .in_valid_normal_case(dca_signal_09),
+
+  .in_early_output0(dca_signal_00),
+  .in_muxed_exponent(dca_signal_19),
+  .in_input0_significand(dca_signal_22),
+  .in_input1_significand(dca_signal_08),
+
+  .out_adder_input0(dca_signal_04),
+  .out_adder_input1(dca_signal_23),
+  .out_adder_carryin(dca_signal_12),
+  .in_adder_output0(dca_signal_13),
+  
+  .out_valid_early_case(dca_signal_18),
+  .out_valid_normal_case(dca_signal_01),
+  
+  .out_early_output0(dca_signal_11),
+  .out_muxed_exponent(dca_signal_05),
+  .out_added_significand(dca_signal_20)
+);
+
+assign dca_signal_13 = dca_signal_03;
+
+PACT_FADDER_PIPELINE3
+#(
+  .TENSOR_BW_SIGNIFICAND_EXTENDED(DCA_LPARA_1)
+)
+i_dca_instance_2
+(
+  .clk(dca_port_03),
+  .rstnn(dca_port_01),
+  .enable(dca_port_07),
+
+  .in_valid_early_case(dca_signal_18),
+  .in_valid_normal_case(dca_signal_01),  
+  .in_early_output0(dca_signal_11),
+  .in_muxed_exponent(dca_signal_05),
+  .in_added_significand(dca_signal_20),
+
+  .out_valid(dca_signal_06),
+  .out_result(dca_signal_10)
+);
+
+assign dca_port_05 = (dca_port_00)? dca_signal_06 : dca_port_02;
+assign dca_port_09 = (dca_port_00)? dca_signal_10 : $unsigned(dca_signal_17);
+
+`else 
+
+assign dca_port_05 = dca_port_02;
+assign dca_port_09 = $signed(dca_signal_14) + $signed(dca_signal_16) + dca_signal_02;
+
+`endif 
 
 endmodule

@@ -11,7 +11,7 @@
 // IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
 // COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
 // ****************************************************************************
-// 2025-11-05
+// 2026-07-09
 // Kyuseung Han (han@etri.re.kr)
 // ****************************************************************************
 // ****************************************************************************
@@ -72,84 +72,84 @@ input wire loadreg_rrequest;
 
 genvar i;
 
-wire dca_signal_7;
-wire dca_signal_2;
-wire dca_signal_1;
-
-localparam  DCA_LPARA_4 = MATRIX_NUM_ROW;
-
-wire dca_signal_8;
-wire dca_signal_5;
-wire [DCA_LPARA_4-1:0] dca_signal_4;
-wire dca_signal_3;
+wire dca_signal_4;
 wire dca_signal_0;
+wire dca_signal_6;
 
-localparam  DCA_LPARA_3 = 2;
-localparam  DCA_LPARA_2 = 0;
-localparam  DCA_LPARA_1 = 1;
-localparam  DCA_LPARA_0 = 2;
+localparam  DCA_LPARA_2 = MATRIX_NUM_ROW;
 
-reg [DCA_LPARA_3-1:0] dca_signal_6;
+wire dca_signal_3;
+wire dca_signal_8;
+wire [DCA_LPARA_2-1:0] dca_signal_1;
+wire dca_signal_2;
+wire dca_signal_7;
 
-assign dca_signal_7 = load_tensor_row_wvalid & load_tensor_row_wready;
-assign dca_signal_2 = dca_signal_7 | (dca_signal_6==DCA_LPARA_1);
-assign dca_signal_1 = dca_signal_2 & dca_signal_0;
+localparam  DCA_LPARA_1 = 2;
+localparam  DCA_LPARA_0 = 0;
+localparam  DCA_LPARA_3 = 1;
+localparam  DCA_LPARA_4 = 2;
+
+reg [DCA_LPARA_1-1:0] dca_signal_5;
+
+assign dca_signal_4 = load_tensor_row_wvalid & load_tensor_row_wready;
+assign dca_signal_0 = dca_signal_4 | (dca_signal_5==DCA_LPARA_3);
+assign dca_signal_6 = dca_signal_0 & dca_signal_7;
 
 ERVP_COUNTER_WITH_ONEHOT_ENCODING
 #(
-  .COUNT_LENGTH(DCA_LPARA_4)
+  .COUNT_LENGTH(DCA_LPARA_2)
 )
 i_dca_instance_0
 (
   .clk(clk),
   .rstnn(rstnn),
   .enable(enable),
-  .init(dca_signal_8),
-  .count(dca_signal_5),
-  .value(dca_signal_4),
-  .is_first_count(dca_signal_3),
-  .is_last_count(dca_signal_0)
+  .init(dca_signal_3),
+  .count(dca_signal_8),
+  .value(dca_signal_1),
+  .is_first_count(dca_signal_2),
+  .is_last_count(dca_signal_7)
 );
 
-assign dca_signal_8 = clear | dca_signal_1;
-assign dca_signal_5 = dca_signal_2;
+assign dca_signal_3 = clear | dca_signal_6;
+assign dca_signal_8 = dca_signal_0;
 
 always@(posedge clk or negedge rstnn)
 begin
   if(~rstnn)
-    dca_signal_6 <= DCA_LPARA_2;
+    dca_signal_5 <= DCA_LPARA_0;
   else if(clear)
-    dca_signal_6 <= DCA_LPARA_2;
+    dca_signal_5 <= DCA_LPARA_0;
   else if(enable)
-    case(dca_signal_6)
-      DCA_LPARA_2:
-        if(dca_signal_7 & load_tensor_row_wlast)
-        begin
-          if(dca_signal_0)
-            dca_signal_6 <= DCA_LPARA_0;
-          else
-            dca_signal_6 <= DCA_LPARA_1;
-        end
-      DCA_LPARA_1:
-        if(dca_signal_1)
-          dca_signal_6 <= DCA_LPARA_0;
+    case(dca_signal_5)
       DCA_LPARA_0:
+        if(dca_signal_4 & load_tensor_row_wlast)
+        begin
+          if(dca_signal_7)
+            dca_signal_5 <= DCA_LPARA_4;
+          else
+            dca_signal_5 <= DCA_LPARA_3;
+        end
+      DCA_LPARA_3:
+        if(dca_signal_6)
+          dca_signal_5 <= DCA_LPARA_4;
+      DCA_LPARA_4:
         if(loadreg_rrequest)
-          dca_signal_6 <= DCA_LPARA_2;
+          dca_signal_5 <= DCA_LPARA_0;
     endcase
 end
 
-assign load_tensor_row_wready = (dca_signal_6==DCA_LPARA_2);
+assign load_tensor_row_wready = (dca_signal_5==DCA_LPARA_0);
 
-assign mreg_move_wenable = dca_signal_2;
+assign mreg_move_wenable = dca_signal_0;
 generate
 for(i=0; i<MATRIX_NUM_COL; i=i+1)
 begin : i_wdata
-  assign mreg_move_wdata_list1d[BW_TENSOR_SCALAR*i+:BW_TENSOR_SCALAR] = (dca_signal_6==DCA_LPARA_1)? TENSOR_ZERO : load_tensor_row_wdata[BW_TENSOR_SCALAR*i+:BW_TENSOR_SCALAR];
+  assign mreg_move_wdata_list1d[BW_TENSOR_SCALAR*i+:BW_TENSOR_SCALAR] = (dca_signal_5==DCA_LPARA_3)? TENSOR_ZERO : load_tensor_row_wdata[BW_TENSOR_SCALAR*i+:BW_TENSOR_SCALAR];
 end
 endgenerate
 
-assign loadreg_rready = (dca_signal_6==DCA_LPARA_0);
-assign busy = (dca_signal_6!=DCA_LPARA_0);
+assign loadreg_rready = (dca_signal_5==DCA_LPARA_4);
+assign busy = (dca_signal_5!=DCA_LPARA_4);
 
 endmodule

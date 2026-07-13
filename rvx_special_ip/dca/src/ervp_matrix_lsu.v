@@ -11,7 +11,7 @@
 // IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
 // COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
 // ****************************************************************************
-// 2025-11-05
+// 2026-07-09
 // Kyuseung Han (han@etri.re.kr)
 // ****************************************************************************
 // ****************************************************************************
@@ -32,6 +32,7 @@ module ERVP_MATRIX_LSU
   rinst_decode_finish,
   rinst_execute_finish,
   rinst_busy,
+  rcache_flush,
 
   slxqdready,
   slxqvalid,
@@ -83,6 +84,7 @@ output wire rinst_wready;
 output wire rinst_decode_finish;
 output wire rinst_execute_finish;
 output wire rinst_busy;
+input wire rcache_flush;
 
 output wire rload_tensor_row_wvalid;
 output wire rload_tensor_row_wlast;
@@ -135,6 +137,8 @@ i_dca_instance_0
   .inst_wready(rinst_wready),
   .inst_decode_finish(rinst_decode_finish),
   .inst_execute_finish(rinst_execute_finish),
+
+  .cache_flush(rcache_flush),
 
   .load_tensor_row_wvalid(rload_tensor_row_wvalid),
   .load_tensor_row_wlast(rload_tensor_row_wlast),

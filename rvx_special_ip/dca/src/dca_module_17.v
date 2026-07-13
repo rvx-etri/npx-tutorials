@@ -11,15 +11,13 @@
 // IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
 // COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
 // ****************************************************************************
-// 2025-11-05
+// 2026-07-09
 // Kyuseung Han (han@etri.re.kr)
 // ****************************************************************************
 // ****************************************************************************
 
 `include "ervp_global.vh"
-
-`include "dca_matrix_info.vh"
-`include "dca_matrix_lsu_inst.vh"
+`include "ervp_axi_define.vh"
 `include "dca_module_memorymap_offset.vh"
 
 
@@ -27,51 +25,41 @@
 
 module DCA_MODULE_17
 (
-  dca_port_11,
-  dca_port_06,
-  dca_port_10,
-  dca_port_02,
-  dca_port_15,
-
-  dca_port_31,
-  dca_port_34,
-  dca_port_33,
-  dca_port_17,
-  dca_port_22,
-  dca_port_19,
-  dca_port_21,
-  dca_port_14,
-  dca_port_29,
-  dca_port_32,
-  dca_port_12,
-
-  dca_port_01,
-  dca_port_28,
-  dca_port_04,
-  dca_port_13,
-  dca_port_03,
-  dca_port_30,
-  dca_port_18,
-  dca_port_08,
-  dca_port_23,
-  dca_port_25,
-
-  dca_port_26,
-  dca_port_09,
-  dca_port_05,
-  dca_port_07,
-  dca_port_24,
-  dca_port_27,
-  dca_port_35,
   dca_port_20,
+  dca_port_13,
+  dca_port_19,
+  dca_port_07,
+  dca_port_02,
+
+  dca_port_00,
+  dca_port_22,
+  dca_port_18,
+
+  dca_port_06,
+  dca_port_05,
+  dca_port_21,
+
+  dca_port_08,
+  dca_port_17,
+  dca_port_03,
+
+  dca_port_15,
+  dca_port_09,
+
   dca_port_16,
-  dca_port_00
+  dca_port_04,
+  dca_port_01,
+  dca_port_10,
+
+  dca_port_14,
+  dca_port_11,
+  dca_port_12
 );
 
 
 
 
-parameter MATRIX_SIZE_PARA = 8;
+parameter MATRIX_SIZE_PARA = 4;
 parameter TENSOR_PARA = 0;
 
 `include "dca_matrix_dim_util.vb"
@@ -80,293 +68,685 @@ parameter TENSOR_PARA = 0;
 `include "dca_tensor_scalar_lpara.vb"
 `include "dca_tensor_dim_lpara.vb"
 
-input wire dca_port_11;
-input wire dca_port_06;
-input wire dca_port_10;
-input wire dca_port_02;
-output wire dca_port_15;
-
-localparam  DCA_LPARA_1 = `BW_DCA_MRU_STATUS;
-localparam  DCA_LPARA_2 = `BW_DCA_MRU_LOG;
-localparam  DCA_LPARA_7 = `BW_DCA_MRU_INST;
-localparam  DCA_LPARA_4 = `BW_DCA_MRU_INPUT;
-
-input wire dca_port_31;
-input wire [DCA_LPARA_7-1:0] dca_port_34;
-output wire dca_port_33;
-output wire dca_port_17;
-input wire dca_port_22;
-output wire dca_port_19;
-output wire [DCA_LPARA_2-1:0] dca_port_21;
-input wire dca_port_14;
-input wire [DCA_LPARA_4-1:0] dca_port_29;
-output wire dca_port_32;
-output wire [DCA_LPARA_1-1:0] dca_port_12;
-
-input wire dca_port_01;
-output wire dca_port_28;
-output wire [`BW_DCA_MATRIX_LSU_INST-1:0] dca_port_04;
+input wire dca_port_20;
 input wire dca_port_13;
-input wire dca_port_03;
-input wire dca_port_30;
-
-output wire dca_port_18;
-input wire dca_port_08;
-input wire dca_port_23;
-input wire [BW_TENSOR_ROW-1:0] dca_port_25;
-
-input wire dca_port_26;
-output wire dca_port_09;
-output wire [`BW_DCA_MATRIX_LSU_INST-1:0] dca_port_05;
+input wire dca_port_19;
 input wire dca_port_07;
-input wire dca_port_24;
-input wire dca_port_27;
+output wire dca_port_02;
 
-input wire dca_port_35;
-output wire dca_port_20;
-input wire dca_port_16;
-output wire [BW_TENSOR_ROW-1:0] dca_port_00;
+input wire dca_port_00;
+input wire [BW_BLOCKED_STEP_INST-1:0] dca_port_22;
+output wire dca_port_18;
 
-localparam  DCA_LPARA_3 = BW_BLOCKED_STEP_INST;
-localparam  DCA_LPARA_5 = 4;
+input wire [BW_TENSOR_MATRIX-1:0] dca_port_06;
+output wire dca_port_05;
+output wire dca_port_21;
 
-wire dca_signal_23;
-wire dca_signal_29;
-wire [DCA_LPARA_3-1:0] dca_signal_28;
+input wire [BW_TENSOR_MATRIX-1:0] dca_port_08;
+output wire dca_port_17;
+output wire dca_port_03;
+
+output wire dca_port_15;
+input wire [BW_TENSOR_MATRIX-1:0] dca_port_09;
+
+input wire [BW_TENSOR_MATRIX-1:0] dca_port_16;
+output wire dca_port_04;
+output wire [MATRIX_NUM_ELEMENT-1:0] dca_port_01;
+output reg [BW_TENSOR_MATRIX-1:0] dca_port_10;
+
+input wire [BW_TENSOR_MATRIX-1:0] dca_port_14;
+output wire [MATRIX_NUM_ELEMENT-1:0] dca_port_11;
+output wire [BW_TENSOR_MATRIX-1:0] dca_port_12;
+
+wire [`BW_DCA_NEUGEMM_OPCODE-1:0] dca_signal_37;
+wire dca_signal_76;
+wire [MATRIX_NUM_COL-1:0] dca_signal_77;
+wire [MATRIX_NUM_ROW-1:0] dca_signal_15;
+wire [MATRIX_MAX_DIM-1:0] dca_signal_23;
+
+wire dca_signal_50;
+wire dca_signal_73;
+wire dca_signal_43;
+wire dca_signal_58;
+wire dca_signal_10;
+wire dca_signal_28;
+wire dca_signal_78;
+wire dca_signal_59;
+wire dca_signal_21;
+wire dca_signal_12;
+wire dca_signal_71;
+
+localparam  DCA_LPARA_01 = 1;
+localparam  DCA_LPARA_09 = 0;
+localparam  DCA_LPARA_00 = 1;
+
+reg [DCA_LPARA_01-1:0] dca_signal_05;
+
+genvar i;
+genvar i_row, i_col;
+
+reg dca_signal_18;
+reg dca_signal_17;
+reg dca_signal_33;
+reg dca_signal_67;
+reg dca_signal_20;
+wire dca_signal_41;
+
+localparam  DCA_LPARA_11 = 1;
+localparam  DCA_LPARA_05 = 3;
+localparam  DCA_LPARA_22 = 2;
+localparam  DCA_LPARA_13 = 3;
+localparam  DCA_LPARA_04 = 3; 
+
+reg dca_signal_36;
+wire dca_signal_57;
+reg dca_signal_11;
+wire [DCA_LPARA_04-1:0] dca_signal_42;
+
+reg dca_signal_51;
+reg dca_signal_65;
+reg [BW_TENSOR_MATRIX-1:0] dca_signal_34;
+reg [BW_TENSOR_MATRIX-1:0] dca_signal_45;
+wire [BW_TENSOR_MATRIX-1:0] dca_signal_29;
+
+reg dca_signal_52;
+reg dca_signal_38;
+reg [BW_TENSOR_MATRIX-1:0] dca_signal_55;
+reg [BW_TENSOR_MATRIX-1:0] dca_signal_32;
+wire [BW_TENSOR_MATRIX-1:0] dca_signal_13;
+
+localparam  DCA_LPARA_19 = DCA_LPARA_22;
+localparam  DCA_LPARA_10 = DCA_LPARA_11;
+localparam  DCA_LPARA_14 = 1;
+localparam  DCA_LPARA_08 = MATRIX_MAX_DIM;
+
+wire dca_signal_00;
+wire [DCA_LPARA_14-1:0] dca_signal_66;
+wire [DCA_LPARA_08-1:0] dca_signal_16;
+wire dca_signal_74;
+wire dca_signal_26;
+wire dca_signal_61;
+wire dca_signal_46;
 wire dca_signal_30;
-wire dca_signal_11;
-wire [DCA_LPARA_3-1:0] dca_signal_16;
+wire dca_signal_62;
+wire dca_signal_07;
+wire dca_signal_31;
 
-wire dca_signal_09;
-
-localparam  DCA_LPARA_6 = BW_TENSOR_ROW;
-localparam  DCA_LPARA_0 = TENSOR_ZERO;
+localparam  DCA_LPARA_02 = DCA_LPARA_13;
+localparam  DCA_LPARA_23 = DCA_LPARA_05;
+localparam  DCA_LPARA_03 = 1;
+localparam  DCA_LPARA_07 = MATRIX_MAX_DIM;
 
 wire dca_signal_06;
-wire [DCA_LPARA_6-1:0] dca_signal_10;
+wire [DCA_LPARA_03-1:0] dca_signal_80;
+wire [DCA_LPARA_07-1:0] dca_signal_68;
+wire dca_signal_60;
+wire dca_signal_25;
+wire dca_signal_70;
+wire dca_signal_63;
 wire dca_signal_02;
-wire [DCA_LPARA_6-1:0] dca_signal_24;
-wire dca_signal_01;
-wire dca_signal_17;
-wire dca_signal_13;
-wire [BW_TENSOR_MATRIX-1:0] dca_signal_27;
-wire [BW_TENSOR_ROW-1:0] dca_signal_07;
-
-wire dca_signal_18;
-wire dca_signal_21;
-wire dca_signal_26;
-
-wire dca_signal_12;
-wire dca_signal_04;
-wire [DCA_LPARA_6-1:0] dca_signal_20;
-wire dca_signal_19;
-wire [DCA_LPARA_6-1:0] dca_signal_22;
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_08;
-wire [BW_TENSOR_MATRIX-1:0] dca_signal_00;
-wire [BW_TENSOR_MATRIX-1:0] dca_signal_25;
-
-wire dca_signal_03;
-wire dca_signal_15;
-wire dca_signal_05;
-
+wire dca_signal_08;
 wire dca_signal_14;
+wire dca_signal_69;
 
-ERVP_FIFO
+localparam  DCA_LPARA_18 = DCA_LPARA_22;
+localparam  DCA_LPARA_17 = DCA_LPARA_11;
+localparam  DCA_LPARA_15 = MATRIX_NUM_ROW;
+localparam  DCA_LPARA_06 = MATRIX_NUM_COL;
+
+wire dca_signal_48;
+wire [DCA_LPARA_15-1:0] dca_signal_24;
+wire [DCA_LPARA_06-1:0] dca_signal_22;
+wire dca_signal_01;
+wire dca_signal_72;
+wire dca_signal_49;
+wire dca_signal_56;
+wire dca_signal_09;
+wire dca_signal_27;
+wire dca_signal_44;
+wire dca_signal_75;
+
+localparam  DCA_LPARA_21 = DCA_LPARA_13;
+localparam  DCA_LPARA_12 = DCA_LPARA_05;
+localparam  DCA_LPARA_20 = MATRIX_NUM_ROW;
+localparam  DCA_LPARA_16 = MATRIX_NUM_COL;
+
+wire dca_signal_54;
+wire [DCA_LPARA_20-1:0] dca_signal_39;
+wire [DCA_LPARA_16-1:0] dca_signal_19;
+wire dca_signal_40;
+wire dca_signal_47;
+wire dca_signal_03;
+wire dca_signal_35;
+wire dca_signal_64;
+wire dca_signal_53;
+wire dca_signal_04;
+wire dca_signal_79;
+
+assign {dca_signal_23, dca_signal_15, dca_signal_77, dca_signal_76, dca_signal_37} = dca_port_22;
+
+assign dca_signal_50 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_ADDSUB];
+assign dca_signal_73 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_RSRC_INV];
+assign dca_signal_43 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_EWMULT];
+assign dca_signal_58 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_MULT_COND];
+assign dca_signal_10 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_CONV_COND];
+assign dca_signal_28 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_INIT_ACC];
+assign dca_signal_78 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_IS_FLOAT];
+assign dca_signal_59 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_LSU0_REQ];
+assign dca_signal_21 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_LSU1_REQ];
+assign dca_signal_12 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_LSU2_REQ];
+assign dca_signal_71 = dca_signal_37[`DCA_NEUGEMM_OPCODE_INDEX_RSRC_CONSTANT];
+
+always@(posedge dca_port_20, negedge dca_port_13)
+begin
+  if(dca_port_13==0)
+    dca_signal_05 <= DCA_LPARA_09;
+  else if(dca_port_19)
+    dca_signal_05 <= DCA_LPARA_09;
+  else
+    case(dca_signal_05)
+      DCA_LPARA_09:
+        if(dca_port_00)
+          dca_signal_05 <= DCA_LPARA_00;
+      DCA_LPARA_00:
+        if(dca_port_18)
+          dca_signal_05 <= DCA_LPARA_09;
+    endcase
+end
+
+assign dca_port_04 = dca_port_00 & dca_signal_28;
+
+assign dca_port_18 = dca_signal_18 | dca_signal_17 | dca_signal_33 | dca_signal_67 | dca_signal_20;
+
+ERVP_COUNTER
 #(
-  .BW_DATA(DCA_LPARA_3),
-  .DEPTH(DCA_LPARA_5)
-)
-i_dca_instance_1
-(
-	.clk(dca_port_11),
-  .rstnn(dca_port_06),
-	.enable(dca_port_02),
-  .clear(dca_port_10),
-	.wready(dca_signal_23),
-	.wfull(),
-	.wrequest(dca_signal_29),
-	.wdata(dca_signal_28),
-	.wnum(),
-	.rready(dca_signal_30),
-	.rempty(),
-	.rrequest(dca_signal_11),
-	.rdata(dca_signal_16),
-	.rnum()
-);
-
-DCA_MODULE_29
-#(
-  .MATRIX_SIZE_PARA(MATRIX_SIZE_PARA)
-)
-i_dca_instance_3
-(
-	.dca_port_17(dca_port_11),
-	.dca_port_07(dca_port_06),
-  .dca_port_05(dca_port_10),
-  .dca_port_12(dca_port_02),
-  .dca_port_03(),
-
-  .dca_port_08(dca_port_31),
-  .dca_port_11(dca_port_34),
-  .dca_port_14(dca_port_33),
-  .dca_port_10(dca_signal_09),
-
-  .dca_port_06(dca_signal_23),
-  .dca_port_02(dca_signal_29),
-  .dca_port_13(dca_signal_28),
-  .dca_port_00(dca_port_13),
-  .dca_port_09(dca_port_28),
-  .dca_port_01(dca_port_04),
-  .dca_port_04(dca_port_07),
-  .dca_port_16(dca_port_09),
-  .dca_port_15(dca_port_05)
-);
-
-DCA_MATRIX_REGISTER_TYPE3
-#(
-  .MATRIX_SIZE_PARA(MATRIX_SIZE_PARA),
-  .BW_TENSOR_SCALAR(BW_TENSOR_SCALAR),
-  .BW_MOVE_DATA(DCA_LPARA_6),
-  .RESET_VALUE(DCA_LPARA_0)
-)
-i_dca_instance_0
-(
-  .clk(dca_port_11),
-  .rstnn(dca_port_06),
-
-  .move_wenable(dca_signal_06),
-  .move_wdata_list(dca_signal_10),
-  .move_renable(dca_signal_02),
-  .move_rdata_list(dca_signal_24),
-  
-  .shift_up(dca_signal_01),
-  .shift_left(dca_signal_17),
-  .transpose(dca_signal_13),
-  
-  .all_rdata_list2d(dca_signal_27),
-  .upmost_rdata_list1d(dca_signal_07)
-);
-
-assign dca_signal_02 = 0;
-assign dca_signal_01 = 0;
-assign dca_signal_17 = 0;
-assign dca_signal_13 = 0;
-
-DCA_MATRIX_LOAD2MREG
-#(
-  .MATRIX_SIZE_PARA(MATRIX_SIZE_PARA),
-  .TENSOR_PARA(TENSOR_PARA)
+  .BW_COUNTER(DCA_LPARA_04)
 )
 i_dca_instance_2
 (
-  .clk(dca_port_11),
-  .rstnn(dca_port_06),
-  .clear(dca_port_10),
-  .enable(dca_port_02),
-  .busy(dca_signal_18),
-
-  .load_tensor_row_wready(dca_port_18),
-  .load_tensor_row_wvalid(dca_port_08),
-  .load_tensor_row_wlast(dca_port_23),
-  .load_tensor_row_wdata(dca_port_25),
-
-  .mreg_move_wenable(dca_signal_06),
-  .mreg_move_wdata_list1d(dca_signal_10),
-
-  .loadreg_rready(dca_signal_21),
-  .loadreg_rrequest(dca_signal_26)
+  .clk(dca_port_20),
+  .rstnn(dca_port_13),
+  .enable(dca_signal_36),
+  .init(dca_signal_57),
+  .count(dca_signal_11),
+  .value(dca_signal_42),
+  .is_first_count(),
+  .is_last_count()
 );
 
-DCA_MATRIX_REGISTER_TYPE5
+assign dca_signal_57 = dca_port_18;
+
+always@(*)
+begin
+  dca_signal_36 = 0;
+  dca_signal_11 = 0;
+  if(dca_signal_05==DCA_LPARA_00)
+    if(dca_signal_50 || dca_signal_43)
+    begin
+      dca_signal_36 = 1;
+      dca_signal_11 = 1;
+    end
+end
+
+always@(*)
+begin
+  dca_signal_18 = 0;
+  dca_signal_17 = 0;
+  dca_signal_33 = 0;
+  dca_signal_67 = 0;
+  dca_signal_20 = 0;
+  if(dca_signal_05==DCA_LPARA_00)
+  begin
+    if(dca_signal_50)
+    begin
+      if(dca_signal_78)
+      begin
+        if(dca_signal_42==(DCA_LPARA_05-1))
+          dca_signal_18 = 1;
+      end
+      else
+      begin
+        if(dca_signal_42==(DCA_LPARA_11-1))
+          dca_signal_18 = 1;
+      end
+    end
+    else if(dca_signal_43)
+    begin
+      if(dca_signal_78)
+      begin
+        if(dca_signal_42==(DCA_LPARA_13-1))
+          dca_signal_17 = 1;
+      end
+      else
+      begin
+        if(dca_signal_42==(DCA_LPARA_22-1))
+          dca_signal_17 = 1;
+      end
+    end
+    else if(dca_signal_58)
+    begin
+      if(dca_signal_78)
+        dca_signal_33 = dca_signal_25;
+      else
+        dca_signal_33 = dca_signal_26;
+    end
+    else if(dca_signal_10)
+    begin
+      if(dca_signal_78)
+        dca_signal_67 = dca_signal_47;
+      else
+        dca_signal_67 = dca_signal_72;
+    end
+    else
+      dca_signal_20 = dca_signal_28;
+  end
+end
+
+assign dca_signal_41 = dca_signal_18 | dca_signal_17;
+
+generate
+for(i=0; i<MATRIX_NUM_ELEMENT; i=i+1)
+begin : i_generate_adder
+  DCA_MODULE_23
+  #(
+    .TENSOR_PARA(TENSOR_PARA)
+  )
+  i_dca_instance_3
+  (
+    .dca_port_03(dca_port_20),
+    .dca_port_01(dca_port_13),
+    .dca_port_07(dca_signal_51),
+    .dca_port_06(dca_signal_73),
+    .dca_port_00(dca_signal_78),
+    .dca_port_02(dca_signal_65),
+    .dca_port_08(dca_signal_34[BW_TENSOR_SCALAR*(i+1)-1-:BW_TENSOR_SCALAR]),
+    .dca_port_04(dca_signal_45[BW_TENSOR_SCALAR*(i+1)-1-:BW_TENSOR_SCALAR]),
+    .dca_port_05(),
+    .dca_port_09(dca_signal_29[BW_TENSOR_SCALAR*(i+1)-1-:BW_TENSOR_SCALAR])
+  );
+end
+endgenerate
+
+always@(*)
+begin
+  dca_signal_51 = 0;
+  if(dca_signal_05==DCA_LPARA_00)
+    if(dca_signal_50 || dca_signal_58 || dca_signal_10)
+      dca_signal_51 = 1;
+end
+
+always@(*)
+begin
+  dca_signal_65 = 0;
+  if(dca_signal_05==DCA_LPARA_00)
+  begin
+    if(dca_signal_50)
+      dca_signal_65 = 1;
+    else if(dca_signal_58)
+    begin
+      if(dca_signal_78)
+        dca_signal_65 = dca_signal_63;
+      else
+        dca_signal_65 = dca_signal_46;
+    end
+    else if(dca_signal_10)
+    begin
+      if(dca_signal_78)
+        dca_signal_65 = dca_signal_35;
+      else
+        dca_signal_65 = dca_signal_56;
+    end
+  end
+end
+
+always@(*)
+begin
+  dca_signal_34 = dca_port_06;
+  dca_signal_45 = dca_port_08;
+  if(dca_signal_50 || dca_signal_43)
+  begin
+    dca_signal_34 = dca_port_06;
+    if(dca_signal_71)
+      dca_signal_45 = dca_port_09;
+    else
+      dca_signal_45 = dca_port_08;
+  end
+  else if(dca_signal_58 || dca_signal_10)
+  begin
+    dca_signal_34 = dca_port_14;
+    dca_signal_45 = dca_port_16;
+  end
+end
+
+generate
+for(i=0; i<MATRIX_NUM_ELEMENT; i=i+1)
+begin : i_generate_multiplier
+  DCA_MODULE_30
+  #(
+    .TENSOR_PARA(TENSOR_PARA)
+  )
+  i_dca_instance_1
+  (
+    .dca_port_0(dca_port_20),
+    .dca_port_3(dca_port_13),
+    .dca_port_7(dca_signal_52),
+    .dca_port_2(dca_signal_78),
+    .dca_port_4(dca_signal_38),
+    .dca_port_1(dca_signal_55[BW_TENSOR_SCALAR*(i+1)-1-:BW_TENSOR_SCALAR]),
+    .dca_port_5(dca_signal_32[BW_TENSOR_SCALAR*(i+1)-1-:BW_TENSOR_SCALAR]),
+    .dca_port_8(),
+    .dca_port_6(dca_signal_13[BW_TENSOR_SCALAR*(i+1)-1-:BW_TENSOR_SCALAR])
+  );
+end
+endgenerate
+
+always@(*)
+begin
+  dca_signal_52 = 0;
+  if(dca_signal_05==DCA_LPARA_00)
+    if(dca_signal_43 || dca_signal_58 || dca_signal_10)
+      dca_signal_52 = 1;
+end
+
+always@(*)
+begin
+  dca_signal_38 = 0;
+  if(dca_signal_05==DCA_LPARA_00)
+  begin
+    if(dca_signal_43)
+      dca_signal_38 = 1;
+    else if(dca_signal_58)
+    begin
+      if(dca_signal_78)
+        dca_signal_38 = dca_signal_70;
+      else
+        dca_signal_38 = dca_signal_61;
+    end
+    else if(dca_signal_10)
+    begin
+      if(dca_signal_78)
+        dca_signal_38 = dca_signal_03;
+      else
+        dca_signal_38 = dca_signal_49;
+    end
+  end
+end
+
+function integer GET_MATRIX_INDEX;
+  input integer row_index;
+  input integer col_index;
+begin
+  GET_MATRIX_INDEX = (row_index*BW_TENSOR_ROW) + (col_index*BW_TENSOR_SCALAR) + BW_TENSOR_SCALAR - 1;
+end
+endfunction
+
+integer n, m;
+
+always@(*)
+begin
+  for(m=0; m<MATRIX_NUM_ROW; m=m+1)
+  begin
+    for(n=0; n<MATRIX_NUM_COL; n=n+1)
+    begin
+      dca_signal_55[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_06[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR];
+      dca_signal_32[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_08[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR];
+      if(dca_signal_43 || dca_signal_10)
+      begin
+        dca_signal_55[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_06[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR];
+        dca_signal_32[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_08[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR];
+      end
+      if(dca_signal_58)
+      begin
+        dca_signal_55[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_06[GET_MATRIX_INDEX(m,0)-:BW_TENSOR_SCALAR];
+        dca_signal_32[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_08[GET_MATRIX_INDEX(0,n)-:BW_TENSOR_SCALAR];
+      end
+      if(dca_signal_71)
+        dca_signal_32[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR] = dca_port_09[GET_MATRIX_INDEX(0,n)-:BW_TENSOR_SCALAR];
+    end
+  end
+end
+
+DCA_MODULE_05
 #(
-  .MATRIX_SIZE_PARA(MATRIX_SIZE_PARA),
-  .BW_TENSOR_SCALAR(BW_TENSOR_SCALAR),
-  .RESET_VALUE(DCA_LPARA_0)
+  .DCA_GPARA_2(DCA_LPARA_19),
+  .DCA_GPARA_0(DCA_LPARA_10),
+  .DCA_GPARA_1(DCA_LPARA_14),
+  .DCA_GPARA_3(DCA_LPARA_08)
 )
 i_dca_instance_4
 (
-  .clk(dca_port_11),
-  .rstnn(dca_port_06),
+  .dca_port_04(dca_port_20),
+  .dca_port_02(dca_port_13),
+  .dca_port_00(dca_signal_00),
 
-  .init(dca_signal_12),
+  .dca_port_01(dca_signal_66),
+  .dca_port_09(dca_signal_16),
 
-  .move_wenable(dca_signal_04),
-  .move_wdata_list(dca_signal_20),
-  .move_renable(dca_signal_19),
-  .move_rdata_list(dca_signal_22),
+  .dca_port_08(dca_signal_74),
+  .dca_port_10(dca_signal_26),
+  
+  .dca_port_12(dca_signal_61),
+  .dca_port_03(dca_signal_46),
 
-  .all_wenable_list2d(dca_signal_08),
-  .all_wdata_list2d(dca_signal_00),
-  .all_rdata_list2d(dca_signal_25)
+  .dca_port_05(dca_signal_30),
+  .dca_port_11(dca_signal_62),
+  .dca_port_07(dca_signal_07),
+  .dca_port_06(dca_signal_31)
 );
 
-assign dca_signal_12 = 0;
-assign dca_signal_04 = 0;
-assign dca_signal_20 = 0;
+assign dca_signal_00 = dca_signal_58 & (~dca_signal_78);
+assign dca_signal_66 = 1;
+assign dca_signal_16 = dca_signal_23;
+assign dca_signal_74 = dca_port_00;
 
-DCA_MATRIX_MREG2STORE
+DCA_MODULE_05
 #(
-  .MATRIX_SIZE_PARA(MATRIX_SIZE_PARA),
-  .BW_TENSOR_SCALAR(BW_TENSOR_SCALAR)
+  .DCA_GPARA_2(DCA_LPARA_02),
+  .DCA_GPARA_0(DCA_LPARA_23),
+  .DCA_GPARA_1(DCA_LPARA_03),
+  .DCA_GPARA_3(DCA_LPARA_07)
 )
 i_dca_instance_6
 (
-  .clk(dca_port_11),
-  .rstnn(dca_port_06),
-  .clear(dca_port_10),
-  .enable(dca_port_02),
-  .busy(dca_signal_03),
+  .dca_port_04(dca_port_20),
+  .dca_port_02(dca_port_13),
+  .dca_port_00(dca_signal_06),
 
-  .storereg_wready(dca_signal_15),
-  .storereg_wrequest(dca_signal_05),
+  .dca_port_01(dca_signal_80),
+  .dca_port_09(dca_signal_68),
 
-  .mreg_move_renable(dca_signal_19),
-  .mreg_move_rdata_list1d(dca_signal_22),
+  .dca_port_08(dca_signal_60),
+  .dca_port_10(dca_signal_25),
+  
+  .dca_port_12(dca_signal_70),
+  .dca_port_03(dca_signal_63),
 
-  .store_tensor_row_rvalid(dca_port_35),
-  .store_tensor_row_rready(dca_port_20),
-  .store_tensor_row_rlast(dca_port_16),
-  .store_tensor_row_rdata(dca_port_00)
+  .dca_port_05(dca_signal_02),
+  .dca_port_11(dca_signal_08),
+  .dca_port_07(dca_signal_14),
+  .dca_port_06(dca_signal_69)
 );
 
-DCA_MODULE_26
+assign dca_signal_06 = 0; 
+assign dca_signal_80 = 1;
+assign dca_signal_68 = dca_signal_23;
+assign dca_signal_60 = dca_port_00;
+
+DCA_MODULE_05
 #(
-  .MATRIX_SIZE_PARA(MATRIX_SIZE_PARA),
-  .TENSOR_PARA(TENSOR_PARA)
+  .DCA_GPARA_2(DCA_LPARA_18),
+  .DCA_GPARA_0(DCA_LPARA_17),
+  .DCA_GPARA_1(DCA_LPARA_15),
+  .DCA_GPARA_3(DCA_LPARA_06)
 )
 i_dca_instance_5
 (
-  .dca_port_15(dca_port_11),
-  .dca_port_07(dca_port_06),
-  .dca_port_16(dca_port_10),
-  .dca_port_05(dca_port_02),
-  .dca_port_03(dca_signal_14),
+  .dca_port_04(dca_port_20),
+  .dca_port_02(dca_port_13),
+  .dca_port_00(dca_signal_48),
 
-  .dca_port_08(dca_port_14),
-  .dca_port_19(dca_port_29),
-  .dca_port_17(dca_port_32),
+  .dca_port_01(dca_signal_24),
+  .dca_port_09(dca_signal_22),
 
-  .dca_port_18(dca_signal_30),
-  .dca_port_12(dca_signal_16),
-  .dca_port_06(dca_signal_11),
+  .dca_port_08(dca_signal_01),
+  .dca_port_10(dca_signal_72),
+  
+  .dca_port_12(dca_signal_49),
+  .dca_port_03(dca_signal_56),
 
-  .dca_port_20(dca_signal_21),
-  .dca_port_00(dca_signal_26),
-  .dca_port_14(dca_signal_15),
-  .dca_port_09(dca_signal_05),
-  .dca_port_01(dca_port_27),
-
-  .dca_port_13(dca_signal_27),
-  .dca_port_11(dca_signal_08),
-  .dca_port_04(dca_signal_00),
-
-  .dca_port_10(dca_signal_09),
-  .dca_port_02(dca_port_17)
+  .dca_port_05(dca_signal_09),
+  .dca_port_11(dca_signal_27),
+  .dca_port_07(dca_signal_44),
+  .dca_port_06(dca_signal_75)
 );
 
-assign dca_port_19 = 0;
-assign dca_port_21 = 0;
-assign dca_port_12 = 0;
-assign dca_port_15 = dca_port_31 | dca_signal_30 | dca_signal_14;
+assign dca_signal_48 = dca_signal_10 & (~dca_signal_78);
+assign dca_signal_24 = dca_signal_23;
+assign dca_signal_22 = dca_signal_23;
+assign dca_signal_01 = dca_port_00;
+
+DCA_MODULE_05
+#(
+  .DCA_GPARA_2(DCA_LPARA_21),
+  .DCA_GPARA_0(DCA_LPARA_12),
+  .DCA_GPARA_1(DCA_LPARA_20),
+  .DCA_GPARA_3(DCA_LPARA_16)
+)
+i_dca_instance_0
+(
+  .dca_port_04(dca_port_20),
+  .dca_port_02(dca_port_13),
+  .dca_port_00(dca_signal_54),
+
+  .dca_port_01(dca_signal_39),
+  .dca_port_09(dca_signal_19),
+
+  .dca_port_08(dca_signal_40),
+  .dca_port_10(dca_signal_47),
+  
+  .dca_port_12(dca_signal_03),
+  .dca_port_03(dca_signal_35),
+
+  .dca_port_05(dca_signal_64),
+  .dca_port_11(dca_signal_53),
+  .dca_port_07(dca_signal_04),
+  .dca_port_06(dca_signal_79)
+);
+
+assign dca_signal_54 = 0; 
+assign dca_signal_39 = dca_signal_23;
+assign dca_signal_19 = dca_signal_23;
+assign dca_signal_40 = dca_port_00;
+
+assign dca_port_05 = dca_signal_09 | dca_signal_64;
+assign dca_port_21 = dca_signal_62 | dca_signal_62 | dca_signal_27 | dca_signal_53;
+
+assign dca_port_17 = dca_signal_62 | dca_signal_62 | dca_signal_09 | dca_signal_64;
+assign dca_port_03 = dca_signal_27 | dca_signal_53;
+
+assign dca_port_15 = (dca_port_00 & dca_signal_71) | dca_signal_10;
+
+generate
+  for(i_row=0; i_row<MATRIX_NUM_ROW; i_row=i_row+1)
+  begin : i_gen_all_wenable_list2d_row
+    for(i_col=0; i_col<MATRIX_NUM_COL; i_col=i_col+1)
+    begin : i_gen_all_wenable_list2d_col
+      assign dca_port_11[i_row*MATRIX_NUM_COL + i_col] = (dca_signal_07 | dca_signal_14 | dca_signal_44 | dca_signal_04) & dca_signal_77[i_col] & dca_signal_15[i_row];
+      assign dca_port_01[i_row*MATRIX_NUM_COL + i_col] = (dca_signal_41 | dca_signal_31 | dca_signal_69 | dca_signal_75 | dca_signal_79) & dca_signal_77[i_col] & dca_signal_15[i_row];
+    end
+  end
+endgenerate
+
+assign dca_port_12 = dca_signal_13;
+
+always@(*)
+begin
+  dca_port_10 = dca_signal_29;
+  if(dca_signal_50)
+    dca_port_10 = dca_signal_29;
+  else if(dca_signal_58 || dca_signal_10)
+    dca_port_10 = dca_signal_29;
+  else if(dca_signal_43)
+    dca_port_10 = dca_signal_13;
+end
+
+assign dca_port_02 = (dca_signal_05!=DCA_LPARA_09);
+
+`ifdef SIM_ENV
+`ifdef PRINT_DCA_MATRIX_CAL
+
+always@(posedge dca_port_20)
+begin
+  if(dca_signal_05==DCA_LPARA_00)
+    $display("\n\n");
+end
+
+always@(negedge dca_port_20)
+begin
+  if(dca_port_00)
+  begin
+    $write("\n[CAL_START]");
+    for(m=0; m<MATRIX_NUM_ROW; m=m+1)
+    begin
+      $write("\n");
+      for(n=0; n<MATRIX_NUM_COL; n=n+1)
+      begin
+        $write(" %d", $signed(dca_port_06[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR]));
+      end
+    end
+    $write("\n");
+    for(m=0; m<MATRIX_NUM_ROW; m=m+1)
+    begin
+      $write("\n");
+      for(n=0; n<MATRIX_NUM_COL; n=n+1)
+      begin
+        $write(" %d", $signed(dca_port_08[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR]));
+      end
+    end
+  end
+end
+
+always@(negedge dca_port_20)
+begin
+  if(dca_signal_07 | dca_signal_14 | dca_signal_44 | dca_signal_04 | dca_signal_31 | dca_signal_69 | dca_signal_75 | dca_signal_79)
+  begin
+    $write("\n[CAL_CONSTANT] %d", $signed(dca_port_09[GET_MATRIX_INDEX(0,0)-:BW_TENSOR_SCALAR]));
+  end
+end
+
+always@(negedge dca_port_20)
+begin
+  if(dca_signal_07 | dca_signal_14 | dca_signal_44 | dca_signal_04)
+  begin
+    $write("\n[CAL_TEMP]");
+    for(m=0; m<MATRIX_NUM_ROW; m=m+1)
+    begin
+      $write("\n");
+      for(n=0; n<MATRIX_NUM_COL; n=n+1)
+      begin
+        $write(" %d", $signed(dca_port_12[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR]));
+      end
+    end
+  end
+end
+
+always@(negedge dca_port_20)
+begin
+  if(dca_signal_31 | dca_signal_69 | dca_signal_75 | dca_signal_79)
+  begin
+    $write("\n[CAL_OUTPUT]");
+    for(m=0; m<MATRIX_NUM_ROW; m=m+1)
+    begin
+      $write("\n");
+      for(n=0; n<MATRIX_NUM_COL; n=n+1)
+      begin
+        $write(" %d", $signed(dca_port_10[GET_MATRIX_INDEX(m,n)-:BW_TENSOR_SCALAR]));
+      end
+    end
+  end
+end
+
+`endif
+`endif
 
 endmodule

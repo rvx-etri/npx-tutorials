@@ -11,244 +11,170 @@
 // IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
 // COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
 // ****************************************************************************
-// 2025-11-05
+// 2026-07-09
 // Kyuseung Han (han@etri.re.kr)
 // ****************************************************************************
 // ****************************************************************************
 
 `include "ervp_global.vh"
+`include "ervp_axi_define.vh"
+`include "dca_matrix_lsu_inst.vh"
 
 
 
-
-
-module DCA_MODULE_00 
+module DCA_MODULE_00
 (
-  dca_port_00,
-  dca_port_02,
   dca_port_01,
-
-  dca_port_03,
-  dca_port_06,
-
-  dca_port_12,
-  dca_port_11,
-  
-  dca_port_10,
-  dca_port_05,
-
-  dca_port_08,
-  dca_port_09,
+  dca_port_00,
+  dca_port_17,
   dca_port_04,
-  dca_port_07
+  dca_port_19,
+
+  dca_port_09,
+
+  dca_port_07,
+  dca_port_06,
+  dca_port_16,
+
+  dca_port_18,
+  dca_port_05,
+  dca_port_08,
+  dca_port_12,
+  dca_port_13,
+  dca_port_15,
+
+  dca_port_11,
+  dca_port_14,
+  dca_port_10,
+  dca_port_02,
+  dca_port_20,
+  dca_port_03
 );
 
 
 
+parameter LSU_PARA = 0;
+parameter AXI_PARA = 32;
+parameter BW_LPI_BURDEN = 1;
+parameter MATRIX_SIZE_PARA = 4;
 
+`include "ervp_axi_lpara.vb"
+`include "dca_matrix_dim_util.vb"
+`include "dca_matrix_dim_lpara.vb"
 
-parameter DCA_GPARA_3 = 10;
-parameter DCA_GPARA_2 = 10;
-parameter DCA_GPARA_0 = 8;
-parameter DCA_GPARA_1 = 8;
-
-input wire dca_port_00;
-input wire dca_port_02;
 input wire dca_port_01;
+input wire dca_port_00;
+input wire dca_port_17;
+input wire dca_port_04;
+output wire dca_port_19;
 
-input wire [DCA_GPARA_0-1:0] dca_port_03;
-input wire [DCA_GPARA_1-1:0] dca_port_06;
+localparam  DCA_LPARA_0 = `BW_DCA_MATRIX_LSU_INST;
 
-input wire dca_port_12;
-output wire dca_port_11;
+input wire [DCA_LPARA_0-1:0] dca_port_09;
 
+`include "dca_lsu_util.vb"
+`include "dca_lsu_lpara.vb"
+
+input wire dca_port_07;
+input wire [BW_TXN_INFO-1:0] dca_port_06;
+output wire dca_port_16;
+
+output wire dca_port_18;
+input wire dca_port_05;
+input wire [BW_AXI_DATA-1:0] dca_port_08;
+input wire [`BW_AXI_WSTRB(BW_AXI_DATA)-1:0] dca_port_12;
+input wire dca_port_13;
+input wire dca_port_15;
+
+`include "lpit_function.vb"
+`include "lpixm_function.vb"
+
+localparam  BW_LPIXM_ADDR = BW_AXI_ADDR;
+localparam  BW_LPIXM_DATA = BW_AXI_DATA;
+
+`include "lpixm_lpara.vb"
+
+input wire [2-1:0] dca_port_11;
+output wire dca_port_14;
 output wire dca_port_10;
-output wire dca_port_05;
+output wire dca_port_02;
+output wire dca_port_20;
+output wire [BW_LPI_QDATA-1:0] dca_port_03;
 
-output wire dca_port_08;
-output wire dca_port_09;
-output wire dca_port_04;
-output wire dca_port_07;
+wire [`BW_DCA_MATRIX_LSU_INST_OPCODE-1:0] dca_signal_29;
+wire [`BW_DCA_MATRIX_INFO_ADDR-1:0] dca_signal_17;
+wire [`BW_DCA_MATRIX_INFO_STRIDE_LS3-1:0] dca_signal_03;
+wire [`BW_DCA_MATRIX_INFO_NUM_ROW_M1-1:0] dca_signal_12;
+wire [`BW_DCA_MATRIX_INFO_NUM_COL_M1-1:0] dca_signal_05;
+wire [`BW_DCA_MATRIX_INFO_IS_SIGNED-1:0] dca_signal_28;
+wire [`BW_DCA_MATRIX_INFO_IS_FLOAT-1:0] dca_signal_16;
+wire [`BW_DCA_MATRIX_INFO_ADDR_LSA_P3-1:0] dca_signal_18;
 
-localparam  DCA_LPARA_2 = 2;
-localparam  DCA_LPARA_6 = 0;
-localparam  DCA_LPARA_4 = 1;
-localparam  DCA_LPARA_3 = 2;
+wire [BW_BITADDR-1:0] dca_signal_23;
+wire [`BW_AXI_ALEN-1:0] dca_signal_20;
+wire dca_signal_26;
+wire dca_signal_22;
 
-reg [DCA_LPARA_2-1:0] dca_signal_04;
-wire dca_signal_07;
+wire [BW_AXI_ADDR-1:0] dca_signal_01;
+wire [BW_AXI_ADDR_OFFSET-1:0] dca_signal_07;
+wire [BW_AXI_ADDR_OFFSET-1:0] dca_signal_19;
+wire [BW_AXI_ADDR-1:0] dca_signal_25;
 
-localparam  DCA_LPARA_1 = DCA_GPARA_0;
+wire dca_signal_04;
 
-reg [DCA_LPARA_1-1:0] dca_signal_01;
-wire dca_signal_17;
+wire [BW_LPI_QPARCEL-1:0] dca_signal_02;
 
-wire dca_signal_14;
-wire dca_signal_19;
-wire [DCA_LPARA_1-1:0] dca_signal_15;
+wire dca_signal_10;
+wire dca_signal_27;
+wire [`BW_AXI_ALEN-1:0] dca_signal_14;
+wire [`BW_AXI_ASIZE-1:0] dca_signal_11;
+wire [`BW_AXI_ABURST-1:0] dca_signal_08;
+wire [BW_AXI_ADDR-1:0] dca_signal_00;
+wire [`NUM_BYTE(BW_AXI_DATA)-1:0] dca_signal_13;
+wire [BW_AXI_DATA-1:0] dca_signal_21;
+
+wire [BW_LPI_BURDEN-1:0] dca_signal_06;
+
+wire dca_signal_15;
+wire dca_signal_24;
 wire dca_signal_09;
 
-localparam  DCA_LPARA_0 = DCA_GPARA_1 + 1;
+assign {dca_signal_18, dca_signal_16, dca_signal_28, dca_signal_05, dca_signal_12, dca_signal_03, dca_signal_17, dca_signal_29} = dca_port_09;
+assign {dca_signal_22, dca_signal_26, dca_signal_20, dca_signal_23} = dca_port_06;
 
-reg [DCA_LPARA_0-1:0] dca_signal_20;
-reg [DCA_LPARA_0-1:0] dca_signal_08;
-wire dca_signal_05;
-wire dca_signal_11;
+assign dca_signal_01 = dca_signal_23>>3;
+assign dca_signal_07 = 0;
+assign dca_signal_19 = dca_signal_01;
+assign dca_signal_25 = {dca_signal_01[BW_AXI_ADDR-1:BW_AXI_ADDR_OFFSET], dca_signal_07};
 
-wire dca_signal_06;
-wire dca_signal_16;
-wire [DCA_LPARA_0-1:0] dca_signal_03;
-wire dca_signal_10;
+assign dca_signal_04 = dca_port_04 & (dca_signal_29==`DCA_MATRIX_LSU_INST_OPCODE_WRITE);
 
-localparam  DCA_LPARA_5 = `MAX(DCA_GPARA_2,DCA_GPARA_3);
+assign dca_port_14 = dca_signal_04 & dca_port_07 & (~dca_signal_22) & dca_port_05;
+assign dca_port_10 = 0;
+assign dca_port_02 = dca_port_13;
+assign dca_port_20 = dca_port_13;
+assign dca_port_03 = {dca_signal_06,dca_signal_02};
+assign dca_signal_02 = {dca_signal_10,dca_signal_27,dca_signal_14,dca_signal_11,dca_signal_08,dca_signal_13,dca_signal_21,dca_signal_00};
 
-wire dca_signal_00;
-wire dca_signal_13;
-wire [DCA_LPARA_5-1:0] dca_signal_02;
+assign dca_signal_10 = dca_port_13;
+assign dca_signal_27 = 1;
+assign dca_signal_14 = $unsigned(dca_signal_20);
+assign dca_signal_11 = AXI_SIZE;
+assign dca_signal_08 = `AXI_BURST_INCR;
+assign dca_signal_13 = dca_port_12;
+assign dca_signal_21 = dca_port_08;
+assign dca_signal_00 = dca_signal_25;
 
-wire dca_signal_12;
-wire dca_signal_18;
+ 
+assign dca_signal_06 = dca_port_15;
 
-always@(posedge dca_port_00, negedge dca_port_02)
-begin
-  if(dca_port_02==0)
-    dca_signal_04 <= DCA_LPARA_6;
-  else if(dca_port_01)
-  begin
-    if(dca_port_11)
-      dca_signal_04 <= DCA_LPARA_6;
-    else if(dca_port_12)
-      dca_signal_04 <= DCA_LPARA_3;
-    else if(dca_signal_19)
-      dca_signal_04 <= DCA_LPARA_4;
-    else if(dca_signal_04==DCA_LPARA_4)
-      dca_signal_04 <= DCA_LPARA_3;
-  end
-end
+assign dca_signal_15 = dca_port_14 & dca_port_11[0];
+assign dca_signal_24 = dca_signal_15 & dca_port_02;
+assign dca_signal_09 = dca_signal_04 & dca_port_07 & dca_signal_22;
 
-assign dca_signal_07 = (dca_signal_04==DCA_LPARA_3);
+assign dca_port_18 = dca_signal_15;
+assign dca_port_16 = dca_signal_24 | dca_signal_09;
 
-always@(posedge dca_port_00, negedge dca_port_02)
-begin
-  if(dca_port_02==0)
-    dca_signal_01 <= 0;
-  else if(dca_port_01)
-  begin
-    if(dca_port_12)
-      dca_signal_01 <= dca_port_03;
-    else if(dca_signal_19)
-      dca_signal_01 <= (dca_signal_01>>1);
-  end
-end
-
-assign dca_signal_17 = dca_signal_07 & dca_signal_01[0];
-
-ERVP_COUNTER_WITH_ONEHOT_ENCODING
-#(
-  .COUNT_LENGTH(DCA_LPARA_1),
-  .UP(1),
-  .RESET_INDEX(0),
-  .CIRCULAR(1)
-)
-i_dca_instance_1
-(
-  .clk(dca_port_00),
-  .rstnn(dca_port_02),
-  .enable(dca_port_01),
-  .init(dca_signal_14),
-  .count(dca_signal_19),
-  .value(dca_signal_15),
-  .is_first_count(),
-  .is_last_count(dca_signal_09)
-);
-
-assign dca_signal_14 = dca_port_12;
-assign dca_signal_19 = dca_signal_16 & dca_signal_10;
-
-always@(posedge dca_port_00, negedge dca_port_02)
-begin
-  if(dca_port_02==0)
-    dca_signal_20 <= 0;
-  else if(dca_port_01)
-  begin
-    if(dca_port_12 || dca_signal_19)
-      dca_signal_20 <= dca_port_06;
-    else if(dca_signal_16)
-      dca_signal_20 <= (dca_signal_20>>1);
-  end
-end
-
-assign dca_signal_05 =  dca_signal_17 & dca_signal_20[0];
-
-always@(posedge dca_port_00, negedge dca_port_02)
-begin
-  if(dca_port_02==0)
-    dca_signal_08 <= 0;
-  else if(dca_port_01)
-  begin
-    if(dca_port_12 || dca_signal_19)
-      dca_signal_08 <= {dca_port_06,1'b 0};
-    else if(dca_signal_16)
-      dca_signal_08 <= (dca_signal_08>>1);
-  end
-end
-
-assign dca_signal_11 = dca_signal_17 & dca_signal_08[0];
-
-ERVP_COUNTER_WITH_ONEHOT_ENCODING
-#(
-  .COUNT_LENGTH(DCA_LPARA_0),
-  .UP(1),
-  .RESET_INDEX(0),
-  .CIRCULAR(1)
-)
-i_dca_instance_2
-(
-  .clk(dca_port_00),
-  .rstnn(dca_port_02),
-  .enable(dca_port_01),
-  .init(dca_signal_06),
-  .count(dca_signal_16),
-  .value(dca_signal_03),
-  .is_first_count(),
-  .is_last_count(dca_signal_10)
-);
-
-assign dca_signal_06 = dca_port_12 | dca_signal_19;
-assign dca_signal_16 = dca_signal_07 & dca_signal_18;
-assign dca_signal_12 = dca_signal_05 | dca_signal_11;
-assign dca_signal_18 = dca_signal_12? dca_signal_02[DCA_LPARA_5-1] : 1;
-
-ERVP_COUNTER_WITH_ONEHOT_ENCODING
-#(
-  .COUNT_LENGTH(DCA_LPARA_5),
-  .UP(1),
-  .RESET_INDEX(0),
-  .CIRCULAR(1)
-)
-i_dca_instance_0
-(
-  .clk(dca_port_00),
-  .rstnn(dca_port_02),
-  .enable(dca_port_01),
-  .init(dca_signal_00),
-  .count(dca_signal_13),
-  .value(dca_signal_02),
-  .is_first_count(),
-  .is_last_count()
-);
-
-assign dca_signal_00 = dca_port_12;
-assign dca_signal_13 = dca_signal_12;
-
-assign dca_port_10 = dca_signal_05 & dca_signal_02[0];
-assign dca_port_05 = dca_signal_11 & dca_signal_02[0];
-
-assign dca_port_11 = dca_signal_19 & dca_signal_09;
-
-assign dca_port_08 = dca_signal_07 & dca_signal_10 & dca_signal_02[0];
-assign dca_port_09 = dca_signal_07 & (~dca_signal_10) & dca_signal_02[0];
-assign dca_port_04 = dca_signal_05 & dca_signal_02[DCA_GPARA_3-1];
-assign dca_port_07 = dca_signal_11 & dca_signal_02[DCA_GPARA_2-1];
+assign dca_port_19 = 0;
 
 endmodule

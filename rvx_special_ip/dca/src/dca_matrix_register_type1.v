@@ -11,7 +11,7 @@
 // IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
 // COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
 // ****************************************************************************
-// 2025-11-05
+// 2026-07-09
 // Kyuseung Han (han@etri.re.kr)
 // ****************************************************************************
 // ****************************************************************************
@@ -88,34 +88,34 @@ output wire [BW_TENSOR_ROW-1:0] upmost_rdata_list1d;
 
 genvar i, i_row, i_col;
 
-wire dca_signal_18;
-wire dca_signal_19;
+wire dca_signal_13;
+wire dca_signal_11;
 
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_12;
-
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_10;
-wire [BW_TENSOR_MATRIX-1:0] dca_signal_00;
-
-wire [MATRIX_NUM_COL-1:0] dca_signal_17;
-wire [BW_TENSOR_ROW-1:0] dca_signal_06;
-
-wire [MATRIX_NUM_COL-1:0] dca_signal_09;
-wire [BW_TENSOR_ROW-1:0] dca_signal_01;
-
-wire [MATRIX_NUM_ROW-1:0] dca_signal_14;
-
-wire [MATRIX_NUM_ROW-1:0] dca_signal_07;
-wire [BW_TENSOR_ROW-1:0] dca_signal_13;
-
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_11;
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_04;
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_15;
-wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_16;
 wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_03;
 
-wire [BW_TENSOR_ROW-1:0] dca_signal_08;
+wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_18;
+wire [BW_TENSOR_MATRIX-1:0] dca_signal_12;
+
+wire [MATRIX_NUM_COL-1:0] dca_signal_19;
 wire [BW_TENSOR_ROW-1:0] dca_signal_02;
-wire [BW_TENSOR_ROW-1:0] dca_signal_05;
+
+wire [MATRIX_NUM_COL-1:0] dca_signal_06;
+wire [BW_TENSOR_ROW-1:0] dca_signal_04;
+
+wire [MATRIX_NUM_ROW-1:0] dca_signal_09;
+
+wire [MATRIX_NUM_ROW-1:0] dca_signal_17;
+wire [BW_TENSOR_ROW-1:0] dca_signal_01;
+
+wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_05;
+wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_07;
+wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_10;
+wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_14;
+wire [MATRIX_NUM_ELEMENT-1:0] dca_signal_08;
+
+wire [BW_TENSOR_ROW-1:0] dca_signal_00;
+wire [BW_TENSOR_ROW-1:0] dca_signal_16;
+wire [BW_TENSOR_ROW-1:0] dca_signal_15;
 
 DCA_MATRIX_REGISTER_TEMPLATE
 #(
@@ -129,69 +129,69 @@ i_dca_instance_0
   .clk(clk),
   .rstnn(rstnn),
   
-  .init_list2d(dca_signal_12),
+  .init_list2d(dca_signal_03),
   
-  .each_wenable_list2d(dca_signal_10),
-  .each_wdata_list2d(dca_signal_00),
+  .each_wenable_list2d(dca_signal_18),
+  .each_wdata_list2d(dca_signal_12),
   
-  .downmost_wenable_list1d(dca_signal_17),
-  .downmost_wdata_list1d(dca_signal_06),
+  .downmost_wenable_list1d(dca_signal_19),
+  .downmost_wdata_list1d(dca_signal_02),
   
-  .upmost_wenable_list1d(dca_signal_09),
-  .upmost_wdata_list1d(dca_signal_01),
+  .upmost_wenable_list1d(dca_signal_06),
+  .upmost_wdata_list1d(dca_signal_04),
   
-  .rightmost_wenable_list1d(dca_signal_14),
+  .rightmost_wenable_list1d(dca_signal_09),
   .rightmost_wdata_list1d(rightmost_wdata_list1d),
   
-  .leftmost_wenable_list1d(dca_signal_07),
-  .leftmost_wdata_list1d(dca_signal_13),
+  .leftmost_wenable_list1d(dca_signal_17),
+  .leftmost_wdata_list1d(dca_signal_01),
   
-  .shift_up_list2d(dca_signal_11),
-  .shift_down_list2d(dca_signal_04),
-  .shift_left_list2d(dca_signal_15),
-  .shift_right_list2d(dca_signal_16),
+  .shift_up_list2d(dca_signal_05),
+  .shift_down_list2d(dca_signal_07),
+  .shift_left_list2d(dca_signal_10),
+  .shift_right_list2d(dca_signal_14),
   
-  .transpose_list2d(dca_signal_03),
+  .transpose_list2d(dca_signal_08),
   
   .all_rdata_list2d(all_rdata_list2d),
   .upmost_rdata_list1d(upmost_rdata_list1d),
-  .downmost_data_list1d(dca_signal_08),
-  .leftmost_data_list1d(dca_signal_02),
-  .rightmost_data_list1d(dca_signal_05)
+  .downmost_data_list1d(dca_signal_00),
+  .leftmost_data_list1d(dca_signal_16),
+  .rightmost_data_list1d(dca_signal_15)
 );
 
-assign dca_signal_18 = (BW_MOVE_DATA==BW_TENSOR_ROW);
-assign dca_signal_19 = (BW_MOVE_DATA==BW_TENSOR_MATRIX);
+assign dca_signal_13 = (BW_MOVE_DATA==BW_TENSOR_ROW);
+assign dca_signal_11 = (BW_MOVE_DATA==BW_TENSOR_MATRIX);
 
-assign dca_signal_00 = (dca_signal_19 && (~all_wenable))? move_wdata_list : all_wdata_list2d;
-assign dca_signal_06 = (dca_signal_18 && (~downmost_wenable))? move_wdata_list : downmost_wdata_list1d;
+assign dca_signal_12 = (dca_signal_11 && (~all_wenable))? move_wdata_list : all_wdata_list2d;
+assign dca_signal_02 = (dca_signal_13 && (~downmost_wenable))? move_wdata_list : downmost_wdata_list1d;
 
 for(i=0; i<MATRIX_NUM_ELEMENT; i=i+1)
 begin : i_duplicate_2d
-  assign dca_signal_12[i] = init;
-  assign dca_signal_10[i] = all_wenable | (dca_signal_19 & move_wenable);
-  assign dca_signal_11[i] = shift_up | ( dca_signal_18 & (move_wenable|move_renable) );
-  assign dca_signal_15[i] = shift_left;
-  assign dca_signal_03[i] = transpose;
+  assign dca_signal_03[i] = init;
+  assign dca_signal_18[i] = all_wenable | (dca_signal_11 & move_wenable);
+  assign dca_signal_05[i] = shift_up | ( dca_signal_13 & (move_wenable|move_renable) );
+  assign dca_signal_10[i] = shift_left;
+  assign dca_signal_08[i] = transpose;
 end
 
 for(i=0; i<MATRIX_NUM_COL; i=i+1)
 begin : i_duplicate_col
-  assign dca_signal_17[i] = downmost_wenable | (dca_signal_18 & move_wenable);
+  assign dca_signal_19[i] = downmost_wenable | (dca_signal_13 & move_wenable);
 end
 
 for(i=0; i<MATRIX_NUM_ROW; i=i+1)
 begin : i_duplicate_row
-  assign dca_signal_14[i] = rightmost_wenable;
+  assign dca_signal_09[i] = rightmost_wenable;
 end
 
-assign dca_signal_04 = 0;
-assign dca_signal_16 = 0;
-assign dca_signal_09 = 0;
 assign dca_signal_07 = 0;
+assign dca_signal_14 = 0;
+assign dca_signal_06 = 0;
+assign dca_signal_17 = 0;
+assign dca_signal_04 = 0;
 assign dca_signal_01 = 0;
-assign dca_signal_13 = 0;
 
-assign move_rdata_list = dca_signal_18? upmost_rdata_list1d : all_rdata_list2d;
+assign move_rdata_list = dca_signal_13? upmost_rdata_list1d : all_rdata_list2d;
 
 endmodule

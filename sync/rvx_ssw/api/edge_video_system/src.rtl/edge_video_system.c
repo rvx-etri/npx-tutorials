@@ -87,7 +87,7 @@ static void __attribute__ ((constructor)) init_default_frame()
     default_vframe_max[i] = image_alloc_wo_internals(0,0,0);
     default_vframe_max[i]->width = get_resolution_width(IMAGE_RESOLUTION_MAX);
     default_vframe_max[i]->height = get_resolution_height(IMAGE_RESOLUTION_MAX);
-    default_vframe_max[i]->addr[0] = malloc_permanent(VIDEO_FRAME_MAX_SIZE,VIDEO_FRAME_MAX_SIZE);
+    default_vframe_max[i]->addr[0] = palloc_largeram_backpart(VIDEO_FRAME_MAX_SIZE,VIDEO_FRAME_MAX_SIZE);
     default_vframe_max[i]->addr[1] = default_vframe_max[i]->addr[0] + VIDEO_SECTION_MAX_SIZE;
     default_vframe_max[i]->addr[2] = default_vframe_max[i]->addr[1] + VIDEO_SECTION_MAX_SIZE;
   }
@@ -107,18 +107,13 @@ static void default_vframe_max_update()
 
 static void __attribute__ ((destructor)) fini_default_frame()
 {
-  // DO NOT use free due to malloc_permanent
+  // DO NOT use free due to palloc_largeram_backpart
 }
 
 static inline int is_display_4k()
 {
   assert(edge_video_system_config.vframe_out);
   return (edge_video_system_config.vframe_out->width > 1920);
-}
-
-static inline void init_sdram()
-{
-	// NOT required
 }
 
 static void evs_config_init()
@@ -161,7 +156,6 @@ void edge_video_system_setup_default_frame()
 
 void edge_video_system_init()
 {
-	init_sdram();
   evs_config_init();
   run_by_default_config = 1;
 }
